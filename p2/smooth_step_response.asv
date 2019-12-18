@@ -1,0 +1,32 @@
+% Loading of the data
+path = 'Y:\y\sync\current\courses\control\lab\p2\';
+filename = 'to_matlab.csv';
+data = csvread([path filename]);
+
+% Partitioning
+time = data(:,1)';  % time vector
+pv = data(:,2)'; % process value, in this case pressure
+
+% set value is column 3, not needed since there is no control being done
+vop = data(:,4)'; % valve opening percentage
+
+% Normalization for easier visualization
+pv_norm = pv/norm(pv);
+vop_norm = vop/norm(vop);
+
+% Smoothing
+span = 0.1 * length(time); % span of 10% of the total number of data points
+pv_smooth = smooth(time,pv,span,'moving'); % smoothing
+pv_smooth_norm = pv_smooth/norm(pv_smooth);
+
+% Plotting
+figure(1)
+plot(time,vop_norm,'r-','LineWidth',2)
+hold on
+plot(time,pv_norm,'g-','LineWidth',2)
+hold on 
+plot(time,pv_smooth_norm,'b-')
+
+legend('estimulo de apertura de valvula','respuesta de presión cruda','respuesta de presión suavizada')
+xlabel('tiempo (s)')
+ylabel('valores normalizados para comparación')
