@@ -30,17 +30,19 @@ pv_smooth = smooth(time,pv,span,'moving')'; % smoothing
 
 
 % Plotting
-figure(1)
+fig = 1;
+figure(fig)
 plot(time,pv,'g-','LineWidth',3)
 hold on 
-plot(time,pv_smooth,'b-')
+plot(time,pv_smooth,'k-','LineWidth',2)
 title('Respuesta Experimental vs Suavizada')
 legend('Respuesta de presión cruda','Respuesta de presión suavizada','Location','SE')
 xlabel('Tiempo (s)')
 ylabel('Presión ante estimulo de tipo escalón en t=0 (psig)')
 saveas(gcf,'smooth_vs_experimental','png');
 
-figure(2)
+fig = fig + 1;
+figure(fig)
 plot(time_all,pv_all,'b-','LineWidth',2)
 hold on 
 plot(time_all,vop_all,'r-','LineWidth',2)
@@ -49,7 +51,8 @@ legend('Salida (psig)','Entrada (%)','Location','SE')
 xlabel('Tiempo (s)')
 saveas(gcf,'input_vs_output_raw','png');
 
-figure(3) % Normalized input/output plot
+fig = fig + 1;
+figure(fig) % Normalized input/output plot
 plot(time_all,pv_all/norm(pv_all),'b-','LineWidth',2)
 hold on 
 plot(time_all,vop_all/norm(vop_all),'r-','LineWidth',2)
@@ -58,7 +61,8 @@ legend('Salida Normalizada','Entrada Normalizada','Location','SE')
 xlabel('Tiempo (s)')
 saveas(gcf,'input_vs_output_raw_norm','png');
 
-figure(4) % Normalized input/output plot
+fig = fig + 1;
+figure(fig) % Normalized input/output plot
 plot(time,pv_smooth/norm(pv_smooth),'b-','LineWidth',2)
 hold on 
 plot(time,vop/norm(vop),'r-','LineWidth',2)
