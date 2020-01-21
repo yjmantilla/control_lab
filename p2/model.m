@@ -69,7 +69,7 @@ saveas(gcf,'in_vs_out_no_offset_norm','png');
 [plant_stableTime,plant_stableVal,plant_stableIndex] = findStablePoint(time,plant_out,40,0.005);
 
 % not taking into account perturbation
-%[plant_stableTime,plant_stableVal,plant_stableIndex] = findStablePoint(time,out,5,0.005);
+%[plant_stableTime,plant_stableVal,plant_stableIndex] = findStablePoint(time,plant_out,5,0.005);
 
 % find gain (notice that offset was removed so no need to do a delta)
 
@@ -79,6 +79,7 @@ plant_kp = plant_out(plant_stableIndex)/plant_in(plant_stableIndex);
 
 % Method: Ziegler Nichols
 % since time is not equispaced, better to use diff
+zn_name = 'Ziegler - Nichols';
 zn_slope = diff(plant_out)./diff(time);
 [zn_maxSlope,zn_maxSlope_index] = max(zn_slope);
 
@@ -120,6 +121,7 @@ zn_out = step(zn_sys,time)';
 
 
 % Method: Miller Modification
+miller_name = 'Miller';
 miller_tm = zn_tm;
 aux_y = plant_out(plant_stableIndex)*(1-exp(-1));
 miller_tau = (aux_y - zn_b)/zn_m - miller_tm;
@@ -127,6 +129,7 @@ miller_sys = (plant_kp/(miller_tau*s + 1))*exp(-miller_tm*s);
 miller_out = step(miller_sys,time)';
 
 % Method: Smith
+smith_name = 'Smith';
 [~,t28] = findClosest(plant_out,plant_out(plant_stableIndex)*0.283); 
 t28 = time(t28);
 [~,t63] = findClosest(plant_out,plant_out(plant_stableIndex)*0.632); 
@@ -138,6 +141,7 @@ smith_sys = (plant_kp/(smith_tau*s + 1))*exp(-smith_tm*s);
 smith_out = step(smith_sys,time)';
 
 % Method: Alfaro
+alfaro_name = 'Alfaro 1/4 3/4';
 m2p_p1 = 0.25;
 m2p_p2 = 0.75;
 m2p_a = -0.91;
@@ -149,6 +153,7 @@ alfaro_sys = (plant_kp/(alfaro_tau*s + 1))*exp(-alfaro_tm*s);
 alfaro_out = step(alfaro_sys,time)';
 
 % Method: Broida
+broida_name = 'Broida';
 m2p_p1 = 0.28;
 m2p_p2 = 0.40;
 m2p_a = -5.5;
@@ -160,6 +165,7 @@ broida_sys = (plant_kp/(broida_tau*s + 1))*exp(-broida_tm*s);
 broida_out = step(broida_sys,time)';
 
 % Method Chen - Yang
+cy_name = 'Chen - Yang';
 m2p_p1 = 0.33;
 m2p_p2 = 0.67;
 m2p_a = -1.4;
@@ -171,7 +177,7 @@ cy_sys = (plant_kp/(cy_tau*s + 1))*exp(-cy_tm*s);
 cy_out = step(cy_sys,time)';
 
 % Method Ho et al
-
+ho_name = 'Ho et al';
 m2p_p1 = 0.35;
 m2p_p2 = 0.85;
 m2p_a = -0.670;
@@ -183,7 +189,7 @@ ho_sys = (plant_kp/(ho_tau*s + 1))*exp(-ho_tm*s);
 ho_out = step(ho_sys,time)';
 
 % Method Viteckova et al
-
+viteckova_name = 'Viteckova et al';
 m2p_p1 = 0.33;
 m2p_p2 = 0.70;
 m2p_a = -1.245;
@@ -218,15 +224,15 @@ hold on
 % we could use time_raw and out_raw here if we want...
 plot(time,plant_out/max(plant_in),'k-','LineWidth',2);
 title('Comparación modelos 1er orden')
-legend('Ziegler-Nichols','Miller','Smith','Alfaro 1/4 3/4','Broida','Chen-Yang','Ho et al','Viteckova et al','Real','Location','SE')
+legend(zn_name,miller_name,smith_name,alfaro_name,broida_name,cy_name,ho_name,viteckova_name,'Real','Location','SE')
 xlabel('Tiempo (s)')
 saveas(gcf,'comparison_1st_order','png');
 
 % MSE for 1st order models
-models_1_names = {'Alfaro 1/4 3/4','Broida','Chen-Yang','Ho et al','Miller','Smith','Viteckova et al','Ziegler-Nichols'};
+models_1_names = {alfaro_name,broida_name,cy_name,ho_name,miller_name,smith_name,viteckova_name,zn_name};
 models_1_outs= [alfaro_out;broida_out;cy_out;ho_out;miller_out;smith_out;viteckova_out;zn_out];
 models_1_number = 8;
-models_1_MSE = zeros(8,1);
+models_1_MSE = zeros(models_1_number,1);
 %remember to compare against scaled out for unit step
 for aux_i = 1:models_1_number
     models_1_MSE(aux_i) = immse(models_1_outs(aux_i,:),plant_out/max(plant_in));
@@ -239,12 +245,43 @@ models_1_best = models_1_names(models_1_idx);
 % 2nd Order Methods
 
 % Method: Alfaro General 123c
+g123c_name = 'Alfaro General 123c';
 [~,t25] = findClosest(plant_out,plant_out(plant_stableIndex)*0.25); 
 t25 = time(t25);
 [~,t50] = findClosest(plant_out,plant_out(plant_stableIndex)*0.5); 
 t50 = time(t50);
 [~,t75] = findClosest(plant_out,plant_out(plant_stableIndex)*0.75); 
 t75 = time(t75);
-g123c_a = 23;
+g123c_a = (-0.6240*t25 + 0.9866*t50 - 0.3626*t75)/(0.3533*t25 - 0.7036*t50 + 0.3503*t75);
+g123c_a = abs(g123c_a);
 g123c_tauPP = (t75-t25)/(0.9866+0.7036*g123c_a);
-%tau1_123c = 
+g123c_tau1 = g123c_tauPP;
+g123c_tau2 = g123c_a*g123c_tauPP;
+g123c_tm = t75 - (1.3421+1.3455*g123c_a)*g123c_tauPP;
+g123c_tm = abs(g123c_tm);
+g123c_sys = (plant_kp * exp(-g123c_tm*s))/((g123c_tau1*s+1)*(g123c_tau2*s+1));
+g123c_out = step(g123c_sys,time)';
+
+% Methods : Simetrico
+sym_name = 'Simetrico';
+sym_numberOfTests = 1000;
+[sym_tau1,sym_tau2,sym_tm,sym_x] = symmetricModel(sym_numberOfTests,plant_kp,plant_in,plant_out,plant_stableIndex,time,1e-3);
+sym_sys = (plant_kp * exp(-sym_tm*s))/((sym_tau1*s+1)*(sym_tau2*s+1));
+sym_out = step(sym_sys,time)';
+
+% plot responses
+aux_fig = aux_fig + 1;
+figure(aux_fig)
+plot(time,g123c_out,'r-','LineWidth',2);
+hold on
+plot(time,sym_out,'b-','LineWidth',2);
+hold on
+
+% we need to rescale the original because real step was not unitary
+% we could use time_raw and out_raw here if we want...
+plot(time,plant_out/max(plant_in),'k-','LineWidth',2);
+title('Comparación modelos 2do orden')
+legend(g123c_name,sym_name,'Real','Location','SE')
+xlabel('Tiempo (s)')
+saveas(gcf,'comparison_2nd_order','png');
+
