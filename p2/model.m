@@ -17,7 +17,9 @@ plant_out = plant_out - offset_output;
 
 % % make time uniform by interpolation
 % mean sampling frequency was 2.2 samples per sec
-interpolated_time = min(time):1/2.2:max(time); 
+fs = 2.2;
+Ts = 1/fs;
+interpolated_time = min(time):Ts:max(time); 
 interpolated_out = interp1(time,plant_out,interpolated_time);
 interpolated_in = interp1(time,plant_in,interpolated_time);
 interpolated_error = immse(interpolated_out,plant_out(1:end-2));
@@ -200,6 +202,13 @@ m2p_d = -1*(m2p_c - 1);
 viteckova_sys = (plant_kp/(viteckova_tau*s + 1))*exp(-viteckova_tm*s);
 viteckova_out = step(viteckova_sys,time)';
 
+% Matlab Identification 1st Order
+id1_name = 'Matlab 1er Orden';
+id1_data = iddata(plant_out',plant_in',Ts);
+id1_sys = tfest(id1_data,1,0);
+id1_out = step(id1_sys,time)';
+
+
 % plot responses
 aux_fig = aux_fig + 1;
 figure(aux_fig)
@@ -219,19 +228,21 @@ plot(time,ho_out,'r:','LineWidth',2);
 hold on
 plot(time,viteckova_out,'b:','LineWidth',2);
 hold on
+plot(time,id1_out,'g:','LineWidth',2);
+hold on
 
 % we need to rescale the original because step was not unitary
 % we could use time_raw and out_raw here if we want...
 plot(time,plant_out/max(plant_in),'k-','LineWidth',2);
 title('Comparación modelos 1er orden')
-legend(zn_name,miller_name,smith_name,alfaro_name,broida_name,cy_name,ho_name,viteckova_name,'Real','Location','SE')
+legend(zn_name,miller_name,smith_name,alfaro_name,broida_name,cy_name,ho_name,viteckova_name,id1_name,'Real','Location','SE')
 xlabel('Tiempo (s)')
 saveas(gcf,'comparison_1st_order','png');
 
 % MSE for 1st order models
-models_1_names = {alfaro_name,broida_name,cy_name,ho_name,miller_name,smith_name,viteckova_name,zn_name};
-models_1_outs= [alfaro_out;broida_out;cy_out;ho_out;miller_out;smith_out;viteckova_out;zn_out];
-models_1_number = 8;
+models_1_names = {alfaro_name,broida_name,cy_name,ho_name,miller_name,smith_name,viteckova_name,zn_name,id1_name};
+models_1_outs= [alfaro_out;broida_out;cy_out;ho_out;miller_out;smith_out;viteckova_out;zn_out;id1_out];
+models_1_number = 9;
 models_1_MSE = zeros(models_1_number,1);
 %remember to compare against scaled out for unit step
 for aux_i = 1:models_1_number
@@ -354,6 +365,12 @@ m2p_d = -1*(m2p_c - 1);
 viteckova2_sys = (plant_kp/((viteckova2_tau*s + 1)^2))*exp(-viteckova2_tm*s);
 viteckova2_out = step(viteckova2_sys,time)';
 
+% Matlab Identification 2nd Order
+id2_name = 'Matlab 2do Orden';
+id2_data = iddata(plant_out',plant_in',Ts);
+id2_sys = tfest(id2_data,2,0);
+id2_out = step(id2_sys,time)';
+
 % plot responses
 aux_fig = aux_fig + 1;
 figure(aux_fig)
@@ -369,18 +386,20 @@ plot(time,ho2_out,'m-','LineWidth',2);
 hold on
 plot(time,viteckova2_out,'y-','LineWidth',2);
 hold on
+plot(time,id2_out,'r:','LineWidth',2);
+hold on
 % we need to rescale the original because real step was not unitary
 % we could use time_raw and out_raw here if we want...
 plot(time,plant_out/max(plant_in),'k-','LineWidth',2);
 title('Comparación modelos 2do orden')
-legend(g123c_name,sym_name,stark_name,jf_name,ho2_name,viteckova2_name,'Real','Location','SE')
+legend(g123c_name,sym_name,stark_name,jf_name,ho2_name,viteckova2_name,id2_name,'Real','Location','SE')
 xlabel('Tiempo (s)')
 saveas(gcf,'comparison_2nd_order','png');
 
 % MSE for 2nd order models
-models_2_names = {g123c_name,sym_name,stark_name,jf_name,ho2_name,viteckova2_name};
-models_2_outs= [g123c_out;sym_out;stark_out;jf_out;ho2_out;viteckova2_out];
-models_2_number = 6;
+models_2_names = {g123c_name,sym_name,stark_name,jf_name,ho2_name,viteckova2_name,id2_name};
+models_2_outs= [g123c_out;sym_out;stark_out;jf_out;ho2_out;viteckova2_out;id2_out];
+models_2_number = 7;
 models_2_MSE = zeros(models_2_number,1);
 %remember to compare against scaled out for unit step
 for aux_i = 1:models_2_number
@@ -389,4 +408,5 @@ end
 
 [models_2_error,models_2_idx] = min(models_2_MSE);
 models_2_best = models_2_names(models_2_idx);
+
 
