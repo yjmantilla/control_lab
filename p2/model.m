@@ -255,6 +255,7 @@ t75 = time(t75);
 g123c_a = (-0.6240*t25 + 0.9866*t50 - 0.3626*t75)/(0.3533*t25 - 0.7036*t50 + 0.3503*t75);
 g123c_a = abs(g123c_a);
 g123c_tauPP = (t75-t25)/(0.9866+0.7036*g123c_a);
+g123c_tauPP = abs(g123c_tauPP);
 g123c_tau1 = g123c_tauPP;
 g123c_tau2 = g123c_a*g123c_tauPP;
 g123c_tm = t75 - (1.3421+1.3455*g123c_a)*g123c_tauPP;
@@ -262,12 +263,96 @@ g123c_tm = abs(g123c_tm);
 g123c_sys = (plant_kp * exp(-g123c_tm*s))/((g123c_tau1*s+1)*(g123c_tau2*s+1));
 g123c_out = step(g123c_sys,time)';
 
-% Methods : Simetrico
+% Method : Simetrico
 sym_name = 'Simetrico';
-sym_numberOfTests = 1000;
+sym_numberOfTests = 100;
 [sym_tau1,sym_tau2,sym_tm,sym_x] = symmetricModel(sym_numberOfTests,plant_kp,plant_in,plant_out,plant_stableIndex,time,1e-3);
 sym_sys = (plant_kp * exp(-sym_tm*s))/((sym_tau1*s+1)*(sym_tau2*s+1));
 sym_out = step(sym_sys,time)';
+
+% Method : Harriott
+har_name = 'Harriott';
+har_tm = 0;
+[~,t73] = findClosest(plant_out,plant_out(plant_stableIndex)*0.73); 
+har_tausum = (t73-har_tm)/1.3;
+har_t = har_tm + 0.5*har_tausum;
+
+[~,har_t_index] = findClosest(time,har_t); 
+har_ratio = plant_out(har_t_index)/plant_out(plant_stableIndex);
+% RATIO IS GREATER THAN 0.4 SO THE HARRIOTT METHOD IS NOT APPLICABLE
+
+% Method: Stark
+[~,t15] = findClosest(plant_out,plant_out(plant_stableIndex)*0.15); 
+t15 = time(t15);
+[~,t45] = findClosest(plant_out,plant_out(plant_stableIndex)*0.45); 
+t45 = time(t45);
+[~,t75] = findClosest(plant_out,plant_out(plant_stableIndex)*0.75); 
+t75 = time(t75);
+stark_name = 'Stark';
+stark_x = (t45-t15)/(t75-t15);
+stark_damp = (0.0805-5.547*(0.475-stark_x)^2)/(stark_x-0.356);
+if stark_damp <= 1
+    stark_f2 = 0.708*(2.811)^stark_damp;
+else
+    stark_f2 = 2.6*stark_damp -0.6;
+end
+
+stark_wn = stark_f2/(t75-t15);
+stark_f3 = 0.922 * 1.66^(stark_damp);
+stark_tm = t45 - stark_f3/stark_wn;
+stark_tm = abs(stark_tm);
+stark_tau1 = (stark_damp + sqrt(stark_damp^2 - 1))/(stark_wn);
+stark_tau2 = (stark_damp - sqrt(stark_damp^2 - 1))/(stark_wn);
+
+stark_sys = (plant_kp * exp(-stark_tm*s))/((stark_tau1*s+1)*(stark_tau2*s+1));
+stark_out = step(stark_sys,time)';
+
+% Method: Jahanmiri - Fallahi
+jf_name = 'Jahanmiri - Fallahi';
+[~,t2] = findClosest(plant_out,plant_out(plant_stableIndex)*0.02); 
+t2 = time(t2);
+[~,t5] = findClosest(plant_out,plant_out(plant_stableIndex)*0.05); 
+t5 = time(t5);
+[~,t90] = findClosest(plant_out,plant_out(plant_stableIndex)*0.9); 
+t90 = time(t90);
+[~,t70] = findClosest(plant_out,plant_out(plant_stableIndex)*0.7); 
+t70 = time(t70);
+jf_tms = [t2;t5];
+jf_errors = zeros(length(jf_tms),1);
+
+for aux_i = 1:length(jf_tms)
+    [jf_out,~] = jf_model(time,plant_kp,jf_tms(aux_i),t70,t90);
+    jf_errors(aux_i) = immse(jf_out,plant_out/max(plant_in));
+end
+
+[~,jf_index] = min(jf_errors);
+jf_tm = jf_tms(jf_index);
+[jf_out,jf_sys] = jf_model(time,plant_kp,jf_tm,t70,t90);
+
+% Method: Ho et al - Polo Doble
+ho2_name = 'Ho et al - Polo Doble';
+m2p_p1 = 0.35;
+m2p_p2 = 0.85;
+m2p_a = -0.463;
+m2p_b = -1*m2p_a;
+m2p_c = 1.574;
+m2p_d = -1*(m2p_c - 1);
+[ho2_tm,ho2_tau] = model2points(time,plant_out,plant_out(plant_stableIndex),m2p_p1,m2p_p2,m2p_a,m2p_b,m2p_c,m2p_d);
+ho2_sys = (plant_kp/((ho2_tau*s + 1)^2))*exp(-ho2_tm*s);
+ho2_out = step(ho2_sys,time)';
+
+% Method: Viteckova et al - Polo Doble
+
+viteckova2_name = 'Viteckova et al - Polo Doble';
+m2p_p1 = 0.33;
+m2p_p2 = 0.70;
+m2p_a = -0.749;
+m2p_b = -1*m2p_a;
+m2p_c = 1.937;
+m2p_d = -1*(m2p_c - 1);
+[viteckova2_tm,viteckova2_tau] = model2points(time,plant_out,plant_out(plant_stableIndex),m2p_p1,m2p_p2,m2p_a,m2p_b,m2p_c,m2p_d);
+viteckova2_sys = (plant_kp/((viteckova2_tau*s + 1)^2))*exp(-viteckova2_tm*s);
+viteckova2_out = step(viteckova2_sys,time)';
 
 % plot responses
 aux_fig = aux_fig + 1;
@@ -276,12 +361,32 @@ plot(time,g123c_out,'r-','LineWidth',2);
 hold on
 plot(time,sym_out,'b-','LineWidth',2);
 hold on
-
+plot(time,stark_out,'g-','LineWidth',2);
+hold on
+plot(time,jf_out,'c-','LineWidth',2);
+hold on
+plot(time,ho2_out,'m-','LineWidth',2);
+hold on
+plot(time,viteckova2_out,'y-','LineWidth',2);
+hold on
 % we need to rescale the original because real step was not unitary
 % we could use time_raw and out_raw here if we want...
 plot(time,plant_out/max(plant_in),'k-','LineWidth',2);
 title('Comparación modelos 2do orden')
-legend(g123c_name,sym_name,'Real','Location','SE')
+legend(g123c_name,sym_name,stark_name,jf_name,ho2_name,viteckova2_name,'Real','Location','SE')
 xlabel('Tiempo (s)')
 saveas(gcf,'comparison_2nd_order','png');
+
+% MSE for 2nd order models
+models_2_names = {g123c_name,sym_name,stark_name,jf_name,ho2_name,viteckova2_name};
+models_2_outs= [g123c_out;sym_out;stark_out;jf_out;ho2_out;viteckova2_out];
+models_2_number = 6;
+models_2_MSE = zeros(models_2_number,1);
+%remember to compare against scaled out for unit step
+for aux_i = 1:models_2_number
+    models_2_MSE(aux_i) = immse(models_2_outs(aux_i,:),plant_out/max(plant_in));
+end
+
+[models_2_error,models_2_idx] = min(models_2_MSE);
+models_2_best = models_2_names(models_2_idx);
 

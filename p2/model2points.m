@@ -4,7 +4,7 @@ function [tm,tau] = model2points(time,signal,stableVal,p1,p2,a,b,c,d)
     [~,t2] = findClosest(signal,stableVal*p2);
     t2 = time(t2);
     
-    tau = a*t1 + b*t2;
-    tm = c*t1 + d*t2;
+    tau = abs(a*t1 + b*t2);
+    tm = abs(c*t1 + d*t2);
     
 end

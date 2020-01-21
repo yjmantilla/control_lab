@@ -17,6 +17,7 @@ t1mx = time(t1mx);
 a = (-0.6240*tx + 0.9866*t50 - 0.3626*t1mx)/(0.3533*tx - 0.7036*t50 + 0.3503*t1mx);
 a = abs(a);
 tauPP = (t1mx-tx)/(0.9866+0.7036*a);
+tauPP = abs(tauPP);
 tau1 = tauPP;
 tau2 = a*tauPP;
 tm = t1mx - (1.3421+1.3455*a)*tauPP;
