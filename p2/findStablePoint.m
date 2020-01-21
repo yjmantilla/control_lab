@@ -1,5 +1,5 @@
-function [stableTime,stableVal,stableIndex] = findStablePoint(time,signal,timeThresh)
-    tol = 0.005*(max(signal) - min(signal));
+function [stableTime,stableVal,stableIndex] = findStablePoint(time,signal,timeThresh,frac)
+    tol = frac*(max(signal) - min(signal));
     for i = 1:length(signal)
         for j = i:length(signal)
             delta = signal(j) - signal(i);
