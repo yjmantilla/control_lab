@@ -17,6 +17,13 @@ pv_all = data(:,2)'; % process value, in this case pressure
 % set value is column 3, not needed since there is no control being done
 vop_all = data(:,4)'; % valve opening percentage
 
+
+% map to current
+
+a = 4; b = 19.2;
+
+vop_all = mapScale(vop_all,0,100,a,b);
+
 % find when the step stimuli starts
 start = find(vop_all>=max(vop_all), 1, 'first'); 
 time = time_all(start:end);

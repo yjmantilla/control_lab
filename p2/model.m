@@ -10,10 +10,16 @@ plant_out = pv_smooth;
 
 clearvars -except plant_in offset_input plant_out offset_output time
 aux_fig = 1;
+
 % remove offset
 
 plant_in = plant_in - offset_input;
 plant_out = plant_out - offset_output;
+
+
+
+
+
 
 % % make time uniform by interpolation
 % mean sampling frequency was 2.2 samples per sec
