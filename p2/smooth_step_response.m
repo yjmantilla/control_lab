@@ -45,7 +45,8 @@ plot(time,pv_smooth,'k-','LineWidth',2)
 title('Respuesta Experimental vs Suavizada')
 legend('Respuesta de presión cruda','Respuesta de presión suavizada','Location','SE')
 xlabel('Tiempo (s)')
-ylabel('Presión ante estimulo de tipo escalón en t=0 (psig)')
+ylabel('Presión ante estimulo de tipo escalón en t=0 (mA)')
+grid on
 saveas(gcf,'smooth_vs_experimental','png');
 
 fig = fig + 1;
@@ -54,8 +55,9 @@ plot(time_all,pv_all,'b-','LineWidth',2)
 hold on 
 plot(time_all,vop_all,'r-','LineWidth',2)
 title('Porcentaje de Apertura de la Valvula (entrada) vs Presión del Tanque (salida)')
-legend('Salida (psig)','Entrada (%)','Location','SE')
+legend('Salida (mA)','Entrada (mA)','Location','SE')
 xlabel('Tiempo (s)')
+grid on
 saveas(gcf,'input_vs_output_raw','png');
 
 fig = fig + 1;
@@ -66,6 +68,7 @@ plot(time_all,vop_all/norm(vop_all),'r-','LineWidth',2)
 title('Porcentaje de Apertura de la Valvula (entrada) vs Presión del Tanque (salida) normalizadas')
 legend('Salida Normalizada','Entrada Normalizada','Location','SE')
 xlabel('Tiempo (s)')
+grid on
 saveas(gcf,'input_vs_output_raw_norm','png');
 
 fig = fig + 1;
@@ -76,6 +79,7 @@ plot(time,vop/norm(vop),'r-','LineWidth',2)
 title('Porcentaje de Apertura de la Valvula (entrada) vs Presión del Tanque (salida) normalizadas y suavizada')
 legend('Salida Normalizada Suavizada','Entrada Normalizada','Location','SE')
 xlabel('Tiempo (s)')
+grid on
 saveas(gcf,'input_vs_output_norm_smooth','png');
 
 offset_input = min(vop_all);

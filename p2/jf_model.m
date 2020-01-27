@@ -1,4 +1,4 @@
-function [jf_out,jf_sys] = jf_model(time,plant_kp,jf_tm,t70,t90)
+function [jf_out,jf_sys,jf_tau] = jf_model(time,plant_kp,jf_tm,t70,t90)
 s = tf('s');
 jf_nabla = (t90-t70)/(t90-jf_tm);
 if jf_nabla <= 0.4771

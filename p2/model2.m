@@ -23,7 +23,7 @@ plant_out_all = plant_out_all - offset_output;
 % mean sampling frequency was 2.2 samples per sec
 fs = 2.2;
 Ts = 1/fs;
-time_end = 1000;
+time_end = 600;
 interpolated_time = min(time):Ts:max(time);
 interpolated_out = interp1(time,plant_out,interpolated_time);
 interpolated_in = interp1(time,plant_in,interpolated_time);
@@ -44,6 +44,7 @@ plot(interpolated_time,interpolated_out/norm(interpolated_out),'k-','LineWidth',
 title('Generación de tiempo uniforme por interpolación')
 legend('Salida no uniforme','Salida Interpolada Uniforme','Location','SE')
 xlabel('Tiempo (s)')
+grid on
 saveas(gcf,'interpolation','png');
 
 raw_time = time;
@@ -69,8 +70,9 @@ plot(time,plant_in,'b-','LineWidth',2)
 hold on 
 plot(time,plant_out,'r-','LineWidth',2)
 title('Entrada vs Salida sin estado estable')
-legend('Entrada (% de apertura valvula)','Salida (presión psig)','Location','SE')
+legend('Entrada (mA apertura valvula)','Salida (presión mA)','Location','SE')
 xlabel('Tiempo (s)')
+grid on
 saveas(gcf,'in_vs_out_no_offset','png');
 
 aux_fig = aux_fig + 1;
@@ -79,8 +81,9 @@ plot(time,plant_in/norm(plant_in),'b-','LineWidth',2)
 hold on 
 plot(time,plant_out/norm(plant_out),'r-','LineWidth',2)
 title('Entrada vs Salida sin estado estable, normalizadas')
-legend('Entrada (% de apertura valvula normalizada)','Salida (presión psig normalizada)','Location','SE')
+legend('Entrada (mA apertura valvula normalizada)','Salida (presión mA normalizada)','Location','SE')
 xlabel('Tiempo (s)')
+grid on
 saveas(gcf,'in_vs_out_no_offset_norm','png');
 
 % find when the signal is stable and determine the value
@@ -106,6 +109,7 @@ zn_slope = diff(plant_out)./diff(time);
 aux_fig = aux_fig + 1;
 figure(aux_fig)
 plot(time(1:end-1),zn_slope)
+grid on
 title('Derivada numerica (diff(y)./diff(t)) de la respuesta respecto al tiempo (no uniforme)')
 
 zn_m = zn_maxSlope;
@@ -131,6 +135,7 @@ ylim([min(plant_out) max(plant_out)])
 title('Recta de mayor tangente vs Respuesta')
 legend('Recta Tangente','Respuesta','Location','SE')
 xlabel('Tiempo (s)')
+grid on
 saveas(gcf,'zn_tangent','png');
 
 % Create the system
@@ -227,6 +232,12 @@ id1_data = iddata(plant_out_all',plant_in_all',Ts);
 % sys = tfest(data,np,nz,iodelay); if NaN estimate
 id1_sys = tfest(id1_data,1,0,NaN);
 id1_out = step(id1_sys,time_ext)';
+id1_tau = get_taus(id1_sys.den);
+id1_kp = id1_sys.num;
+for aux_i = 1:length(id1_tau)
+id1_kp = id1_kp * id1_tau(aux_i);
+end
+id1_tm = id1_sys.ioDelay;
 
 
 % plot responses
@@ -240,15 +251,15 @@ plot(time_ext,smith_out,'b-','LineWidth',2);
 hold on
 plot(time_ext,alfaro_out,'y-','LineWidth',2);
 hold on
-%plot(time_ext,broida_out,'c-','LineWidth',2);
+%plot(time_ext,broida_out,'r:','LineWidth',2);
 %hold on
-%plot(time_ext,cy_out,'m-','LineWidth',2);
+%plot(time_ext,cy_out,'g:','LineWidth',2);
 %hold on
-plot(time_ext,ho_out,'r:','LineWidth',2);
+plot(time_ext,ho_out,'c-','LineWidth',2);
 hold on
 %plot(time_ext,viteckova_out,'b:','LineWidth',2);
 %hold on
-plot(time_ext,id1_out,'g:','LineWidth',2);
+plot(time_ext,id1_out,'m-','LineWidth',2);
 hold on
 
 % we need to rescale the original because step was not unitary
@@ -258,6 +269,7 @@ title('Comparación modelos 1er orden')
 %legend(zn_name,miller_name,smith_name,alfaro_name,broida_name,cy_name,ho_name,viteckova_name,id1_name,'Real','Location','SE')
 legend(zn_name,miller_name,smith_name,alfaro_name,ho_name,id1_name,'Real','Location','SE')
 xlabel('Tiempo (s)')
+grid on
 saveas(gcf,'comparison_1st_order','png');
 
 % MSE for 1st order models
@@ -297,7 +309,7 @@ g123c_out = step(g123c_sys,time_ext)';
 
 % Method : Simetrico
 sym_name = 'Simetrico';
-sym_numberOfTests = 1000;
+sym_numberOfTests = 200;
 [sym_tau1,sym_tau2,sym_tm,sym_x] = symmetricModel(sym_numberOfTests,plant_kp,plant_in,plant_out,plant_stableIndex,time,1e-3);
 sym_sys = (plant_kp * exp(-sym_tm*s))/((sym_tau1*s+1)*(sym_tau2*s+1));
 sym_out = step(sym_sys,time_ext)';
@@ -359,7 +371,7 @@ end
 
 [~,jf_index] = min(jf_errors);
 jf_tm = jf_tms(jf_index);
-[jf_out,jf_sys] = jf_model(time_ext,plant_kp,jf_tm,t70,t90);
+[jf_out,jf_sys,jf_tau] = jf_model(time_ext,plant_kp,jf_tm,t70,t90);
 
 % Method: Ho et al - Polo Doble
 ho2_name = 'Ho et al - Polo Doble';
@@ -393,6 +405,12 @@ id2_data = iddata(plant_out_all',plant_in_all',Ts);
 %sys = tfest(data,np,nz,iodelay); if NaN estimate
 id2_sys = tfest(id2_data,2,0,NaN);
 id2_out = step(id2_sys,time_ext)';
+id2_taus = get_taus(id2_sys.den);
+id2_kp = id2_sys.num;
+for aux_i = 1:length(id2_taus)
+id2_kp = id2_kp * id2_taus(aux_i);
+end
+id2_tm = id2_sys.ioDelay;
 
 % plot responses
 aux_fig = aux_fig + 1;
@@ -407,9 +425,9 @@ plot(time_ext,jf_out,'c-','LineWidth',2);
 hold on
 plot(time_ext,ho2_out,'m-','LineWidth',2);
 hold on
-%plot(time_ext,viteckova2_out,'y-','LineWidth',2);
+%plot(time_ext,viteckova2_out,'r:','LineWidth',2);
 %hold on
-plot(time_ext,id2_out,'r:','LineWidth',2);
+plot(time_ext,id2_out,'y-','LineWidth',2);
 hold on
 % we need to rescale the original because real step was not unitary
 % we could use time_raw and out_raw here if we want...
@@ -418,6 +436,7 @@ title('Comparación modelos 2do orden')
 %legend(g123c_name,sym_name,stark_name,jf_name,ho2_name,viteckova2_name,id2_name,'Real','Location','SE')
 legend(g123c_name,sym_name,stark_name,jf_name,ho2_name,id2_name,'Real','Location','SE')
 xlabel('Tiempo (s)')
+grid on
 saveas(gcf,'comparison_2nd_order','png');
 
 % MSE for 2nd order models
@@ -437,3 +456,14 @@ models_2_best = models_2_names(models_2_idx);
 % doesnt take into account the whole stabilization time of each system
 % should make a longer time and plant out vector to compare better
 
+best_both = [models_1_error,models_2_error];
+best_both_names = [models_1_idx ,models_2_idx];
+[best_error,best_idx] = min(best_both);
+
+if best_idx == 1
+    best_name = models_1_names(best_both_names(best_idx));
+end
+
+if best_idx == 2
+    best_name = models_2_names(best_both_names(best_idx));
+end
