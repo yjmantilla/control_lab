@@ -1,3 +1,4 @@
-function [x] = mapScale(x,low_in,hi_in,low_out,hi_out)
-x = (x-low_in)*(hi_out-low_out)/(hi_in-low_in) + low_out;
+% map range [a,b] to range [c,d]
+function [x] = mapScale(x,a,b,c,d)
+x = (x-a)*(d-c)/(b-a) + c;
 end

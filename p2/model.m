@@ -7,6 +7,8 @@ cd(path)
 
 plant_in = vop;
 plant_out = pv_smooth;
+%plant_in_all = vop_all;
+%plant_out_all = pv_smooth_all;
 
 clearvars -except plant_in offset_input plant_out offset_output time
 aux_fig = 1;
@@ -226,14 +228,14 @@ plot(time,smith_out,'b-','LineWidth',2);
 hold on
 plot(time,alfaro_out,'y-','LineWidth',2);
 hold on
-plot(time,broida_out,'c-','LineWidth',2);
-hold on
-plot(time,cy_out,'m-','LineWidth',2);
-hold on
+%plot(time,broida_out,'c-','LineWidth',2);
+%hold on
+%plot(time,cy_out,'m-','LineWidth',2);
+%hold on
 plot(time,ho_out,'r:','LineWidth',2);
 hold on
-plot(time,viteckova_out,'b:','LineWidth',2);
-hold on
+%plot(time,viteckova_out,'b:','LineWidth',2);
+%hold on
 plot(time,id1_out,'g:','LineWidth',2);
 hold on
 
@@ -241,7 +243,8 @@ hold on
 % we could use time_raw and out_raw here if we want...
 plot(time,plant_out/max(plant_in),'k-','LineWidth',2);
 title('Comparación modelos 1er orden')
-legend(zn_name,miller_name,smith_name,alfaro_name,broida_name,cy_name,ho_name,viteckova_name,id1_name,'Real','Location','SE')
+%legend(zn_name,miller_name,smith_name,alfaro_name,broida_name,cy_name,ho_name,viteckova_name,id1_name,'Real','Location','SE')
+legend(zn_name,miller_name,smith_name,alfaro_name,ho_name,id1_name,'Real','Location','SE')
 xlabel('Tiempo (s)')
 saveas(gcf,'comparison_1st_order','png');
 
@@ -390,15 +393,16 @@ plot(time,jf_out,'c-','LineWidth',2);
 hold on
 plot(time,ho2_out,'m-','LineWidth',2);
 hold on
-plot(time,viteckova2_out,'y-','LineWidth',2);
-hold on
+%plot(time,viteckova2_out,'y-','LineWidth',2);
+%hold on
 plot(time,id2_out,'r:','LineWidth',2);
 hold on
 % we need to rescale the original because real step was not unitary
 % we could use time_raw and out_raw here if we want...
 plot(time,plant_out/max(plant_in),'k-','LineWidth',2);
 title('Comparación modelos 2do orden')
-legend(g123c_name,sym_name,stark_name,jf_name,ho2_name,viteckova2_name,id2_name,'Real','Location','SE')
+%legend(g123c_name,sym_name,stark_name,jf_name,ho2_name,viteckova2_name,id2_name,'Real','Location','SE')
+legend(g123c_name,sym_name,stark_name,jf_name,ho2_name,id2_name,'Real','Location','SE')
 xlabel('Tiempo (s)')
 saveas(gcf,'comparison_2nd_order','png');
 
