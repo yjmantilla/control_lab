@@ -23,6 +23,7 @@ plant_out_all = plant_out_all - offset_output;
 % mean sampling frequency was 2.2 samples per sec
 fs = 2.2;
 Ts = 1/fs;
+time_end = 1000;
 interpolated_time = min(time):Ts:max(time);
 interpolated_out = interp1(time,plant_out,interpolated_time);
 interpolated_in = interp1(time,plant_in,interpolated_time);
@@ -33,6 +34,7 @@ interpolated_time_all = min(time_all):Ts:max(time_all);
 interpolated_out_all = interp1(time_all,plant_out_all,interpolated_time_all);
 interpolated_in_all = interp1(time_all,plant_in_all,interpolated_time_all);
 
+interpolated_time_ext = min(time_all):Ts:time_end;
 figure(aux_fig)
 plot(time,plant_out/norm(plant_out),'g-','LineWidth',4)
 hold on
@@ -54,7 +56,11 @@ plant_in = interpolated_in;
 time_all = interpolated_time_all;
 plant_out_all = interpolated_out_all;
 plant_in_all = interpolated_in_all;
-plant_out_all2 = [plant_out ones(1,length(plant_out_all)-length(plant_out))*max(plant_out)];
+
+% Extension of plant response assuming it keeps it stable value
+time_ext = interpolated_time_ext;
+plant_out_ext = [plant_out ones(1,length(time_ext)-length(plant_out))*max(plant_out)];
+
 % in out Plot
 
 aux_fig = aux_fig + 1;
@@ -130,7 +136,7 @@ saveas(gcf,'zn_tangent','png');
 % Create the system
 s = tf('s');
 zn_sys = (plant_kp/(zn_tau*s + 1))*exp(-zn_tm*s);
-zn_out = step(zn_sys,time)';
+zn_out = step(zn_sys,time_ext)';
 
 
 
@@ -140,7 +146,7 @@ miller_tm = zn_tm;
 aux_y = plant_out(plant_stableIndex)*(1-exp(-1));
 miller_tau = (aux_y - zn_b)/zn_m - miller_tm;
 miller_sys = (plant_kp/(miller_tau*s + 1))*exp(-miller_tm*s);
-miller_out = step(miller_sys,time)';
+miller_out = step(miller_sys,time_ext)';
 
 % Method: Smith
 smith_name = 'Smith';
@@ -152,7 +158,7 @@ smith_tau = 1.5*(t63-t28);
 smith_tm = t63 - smith_tau;
 
 smith_sys = (plant_kp/(smith_tau*s + 1))*exp(-smith_tm*s);
-smith_out = step(smith_sys,time)';
+smith_out = step(smith_sys,time_ext)';
 
 % Method: Alfaro
 alfaro_name = 'Alfaro 1/4 3/4';
@@ -164,7 +170,7 @@ m2p_c = 1.262;
 m2p_d = -1*(m2p_c - 1);
 [alfaro_tm,alfaro_tau] = model2points(time,plant_out,plant_out(plant_stableIndex),m2p_p1,m2p_p2,m2p_a,m2p_b,m2p_c,m2p_d);
 alfaro_sys = (plant_kp/(alfaro_tau*s + 1))*exp(-alfaro_tm*s);
-alfaro_out = step(alfaro_sys,time)';
+alfaro_out = step(alfaro_sys,time_ext)';
 
 % Method: Broida
 broida_name = 'Broida';
@@ -176,7 +182,7 @@ m2p_c = 2.8;
 m2p_d = -1*(m2p_c - 1);
 [broida_tm,broida_tau] = model2points(time,plant_out,plant_out(plant_stableIndex),m2p_p1,m2p_p2,m2p_a,m2p_b,m2p_c,m2p_d);
 broida_sys = (plant_kp/(broida_tau*s + 1))*exp(-broida_tm*s);
-broida_out = step(broida_sys,time)';
+broida_out = step(broida_sys,time_ext)';
 
 % Method Chen - Yang
 cy_name = 'Chen - Yang';
@@ -188,7 +194,7 @@ m2p_c = 1.540;
 m2p_d = -1*(m2p_c - 1);
 [cy_tm,cy_tau] = model2points(time,plant_out,plant_out(plant_stableIndex),m2p_p1,m2p_p2,m2p_a,m2p_b,m2p_c,m2p_d);
 cy_sys = (plant_kp/(cy_tau*s + 1))*exp(-cy_tm*s);
-cy_out = step(cy_sys,time)';
+cy_out = step(cy_sys,time_ext)';
 
 % Method Ho et al
 ho_name = 'Ho et al';
@@ -200,7 +206,7 @@ m2p_c = 1.300;
 m2p_d = -0.290;
 [ho_tm,ho_tau] = model2points(time,plant_out,plant_out(plant_stableIndex),m2p_p1,m2p_p2,m2p_a,m2p_b,m2p_c,m2p_d);
 ho_sys = (plant_kp/(ho_tau*s + 1))*exp(-ho_tm*s);
-ho_out = step(ho_sys,time)';
+ho_out = step(ho_sys,time_ext)';
 
 % Method Viteckova et al
 viteckova_name = 'Viteckova et al';
@@ -212,42 +218,42 @@ m2p_c = 1.498;
 m2p_d = -1*(m2p_c - 1);
 [viteckova_tm,viteckova_tau] = model2points(time,plant_out,plant_out(plant_stableIndex),m2p_p1,m2p_p2,m2p_a,m2p_b,m2p_c,m2p_d);
 viteckova_sys = (plant_kp/(viteckova_tau*s + 1))*exp(-viteckova_tm*s);
-viteckova_out = step(viteckova_sys,time)';
+viteckova_out = step(viteckova_sys,time_ext)';
 
 % Matlab Identification 1st Order
 id1_name = 'Matlab 1er Orden';
-%id1_data = iddata(plant_out_all',plant_in_all',Ts);
-id1_data = iddata(plant_out',plant_in',Ts);
+id1_data = iddata(plant_out_all',plant_in_all',Ts);
+%id1_data = iddata(plant_out',plant_in',Ts);
 % sys = tfest(data,np,nz,iodelay); if NaN estimate
 id1_sys = tfest(id1_data,1,0,NaN);
-id1_out = step(id1_sys,time)';
+id1_out = step(id1_sys,time_ext)';
 
 
 % plot responses
 aux_fig = aux_fig + 1;
 figure(aux_fig)
-plot(time,zn_out,'r-','LineWidth',2);
+plot(time_ext,zn_out,'r-','LineWidth',2);
 hold on
-plot(time,miller_out,'g-','LineWidth',2);
+plot(time_ext,miller_out,'g-','LineWidth',2);
 hold on
-plot(time,smith_out,'b-','LineWidth',2);
+plot(time_ext,smith_out,'b-','LineWidth',2);
 hold on
-plot(time,alfaro_out,'y-','LineWidth',2);
+plot(time_ext,alfaro_out,'y-','LineWidth',2);
 hold on
-%plot(time,broida_out,'c-','LineWidth',2);
+%plot(time_ext,broida_out,'c-','LineWidth',2);
 %hold on
-%plot(time,cy_out,'m-','LineWidth',2);
+%plot(time_ext,cy_out,'m-','LineWidth',2);
 %hold on
-plot(time,ho_out,'r:','LineWidth',2);
+plot(time_ext,ho_out,'r:','LineWidth',2);
 hold on
-%plot(time,viteckova_out,'b:','LineWidth',2);
+%plot(time_ext,viteckova_out,'b:','LineWidth',2);
 %hold on
-plot(time,id1_out,'g:','LineWidth',2);
+plot(time_ext,id1_out,'g:','LineWidth',2);
 hold on
 
 % we need to rescale the original because step was not unitary
 % we could use time_raw and out_raw here if we want...
-plot(time,plant_out/max(plant_in),'k-','LineWidth',2);
+plot(time_ext,plant_out_ext/max(plant_in),'k-','LineWidth',2);
 title('Comparación modelos 1er orden')
 %legend(zn_name,miller_name,smith_name,alfaro_name,broida_name,cy_name,ho_name,viteckova_name,id1_name,'Real','Location','SE')
 legend(zn_name,miller_name,smith_name,alfaro_name,ho_name,id1_name,'Real','Location','SE')
@@ -261,7 +267,7 @@ models_1_number = 9;
 models_1_MSE = zeros(models_1_number,1);
 %remember to compare against scaled out for unit step
 for aux_i = 1:models_1_number
-    models_1_MSE(aux_i) = immse(models_1_outs(aux_i,:),plant_out/max(plant_in));
+    models_1_MSE(aux_i) = immse(models_1_outs(aux_i,:),plant_out_ext/max(plant_in));
 end
 
 [models_1_error,models_1_idx] = min(models_1_MSE);
@@ -287,14 +293,14 @@ g123c_tau2 = g123c_a*g123c_tauPP;
 g123c_tm = t75 - (1.3421+1.3455*g123c_a)*g123c_tauPP;
 g123c_tm = abs(g123c_tm);
 g123c_sys = (plant_kp * exp(-g123c_tm*s))/((g123c_tau1*s+1)*(g123c_tau2*s+1));
-g123c_out = step(g123c_sys,time)';
+g123c_out = step(g123c_sys,time_ext)';
 
 % Method : Simetrico
 sym_name = 'Simetrico';
-sym_numberOfTests = 100;
+sym_numberOfTests = 1000;
 [sym_tau1,sym_tau2,sym_tm,sym_x] = symmetricModel(sym_numberOfTests,plant_kp,plant_in,plant_out,plant_stableIndex,time,1e-3);
 sym_sys = (plant_kp * exp(-sym_tm*s))/((sym_tau1*s+1)*(sym_tau2*s+1));
-sym_out = step(sym_sys,time)';
+sym_out = step(sym_sys,time_ext)';
 
 % Method : Harriott
 har_name = 'Harriott';
@@ -331,7 +337,7 @@ stark_tau1 = (stark_damp + sqrt(stark_damp^2 - 1))/(stark_wn);
 stark_tau2 = (stark_damp - sqrt(stark_damp^2 - 1))/(stark_wn);
 
 stark_sys = (plant_kp * exp(-stark_tm*s))/((stark_tau1*s+1)*(stark_tau2*s+1));
-stark_out = step(stark_sys,time)';
+stark_out = step(stark_sys,time_ext)';
 
 % Method: Jahanmiri - Fallahi
 jf_name = 'Jahanmiri - Fallahi';
@@ -353,7 +359,7 @@ end
 
 [~,jf_index] = min(jf_errors);
 jf_tm = jf_tms(jf_index);
-[jf_out,jf_sys] = jf_model(time,plant_kp,jf_tm,t70,t90);
+[jf_out,jf_sys] = jf_model(time_ext,plant_kp,jf_tm,t70,t90);
 
 % Method: Ho et al - Polo Doble
 ho2_name = 'Ho et al - Polo Doble';
@@ -365,7 +371,7 @@ m2p_c = 1.574;
 m2p_d = -1*(m2p_c - 1);
 [ho2_tm,ho2_tau] = model2points(time,plant_out,plant_out(plant_stableIndex),m2p_p1,m2p_p2,m2p_a,m2p_b,m2p_c,m2p_d);
 ho2_sys = (plant_kp/((ho2_tau*s + 1)^2))*exp(-ho2_tm*s);
-ho2_out = step(ho2_sys,time)';
+ho2_out = step(ho2_sys,time_ext)';
 
 % Method: Viteckova et al - Polo Doble
 
@@ -378,36 +384,36 @@ m2p_c = 1.937;
 m2p_d = -1*(m2p_c - 1);
 [viteckova2_tm,viteckova2_tau] = model2points(time,plant_out,plant_out(plant_stableIndex),m2p_p1,m2p_p2,m2p_a,m2p_b,m2p_c,m2p_d);
 viteckova2_sys = (plant_kp/((viteckova2_tau*s + 1)^2))*exp(-viteckova2_tm*s);
-viteckova2_out = step(viteckova2_sys,time)';
+viteckova2_out = step(viteckova2_sys,time_ext)';
 
 % Matlab Identification 2nd Order
 id2_name = 'Matlab 2do Orden';
-%id2_data = iddata(plant_out_all',plant_in_all',Ts);
-id2_data = iddata(plant_out',plant_in',Ts);
-% sys = tfest(data,np,nz,iodelay); if NaN estimate
+id2_data = iddata(plant_out_all',plant_in_all',Ts);
+%id2_data = iddata(plant_out',plant_in',Ts);
+%sys = tfest(data,np,nz,iodelay); if NaN estimate
 id2_sys = tfest(id2_data,2,0,NaN);
-id2_out = step(id2_sys,time)';
+id2_out = step(id2_sys,time_ext)';
 
 % plot responses
 aux_fig = aux_fig + 1;
 figure(aux_fig)
-plot(time,g123c_out,'r-','LineWidth',2);
+plot(time_ext,g123c_out,'r-','LineWidth',2);
 hold on
-plot(time,sym_out,'b-','LineWidth',2);
+plot(time_ext,sym_out,'b-','LineWidth',2);
 hold on
-plot(time,stark_out,'g-','LineWidth',2);
+plot(time_ext,stark_out,'g-','LineWidth',2);
 hold on
-plot(time,jf_out,'c-','LineWidth',2);
+plot(time_ext,jf_out,'c-','LineWidth',2);
 hold on
-plot(time,ho2_out,'m-','LineWidth',2);
+plot(time_ext,ho2_out,'m-','LineWidth',2);
 hold on
-%plot(time,viteckova2_out,'y-','LineWidth',2);
+%plot(time_ext,viteckova2_out,'y-','LineWidth',2);
 %hold on
-plot(time,id2_out,'r:','LineWidth',2);
+plot(time_ext,id2_out,'r:','LineWidth',2);
 hold on
 % we need to rescale the original because real step was not unitary
 % we could use time_raw and out_raw here if we want...
-plot(time,plant_out/max(plant_in),'k-','LineWidth',2);
+plot(time_ext,plant_out_ext/max(plant_in),'k-','LineWidth',2);
 title('Comparación modelos 2do orden')
 %legend(g123c_name,sym_name,stark_name,jf_name,ho2_name,viteckova2_name,id2_name,'Real','Location','SE')
 legend(g123c_name,sym_name,stark_name,jf_name,ho2_name,id2_name,'Real','Location','SE')
@@ -421,7 +427,7 @@ models_2_number = 7;
 models_2_MSE = zeros(models_2_number,1);
 %remember to compare against scaled out for unit step
 for aux_i = 1:models_2_number
-    models_2_MSE(aux_i) = immse(models_2_outs(aux_i,:),plant_out/max(plant_in));
+    models_2_MSE(aux_i) = immse(models_2_outs(aux_i,:),plant_out_ext/max(plant_in));
 end
 
 [models_2_error,models_2_idx] = min(models_2_MSE);

@@ -80,5 +80,8 @@ saveas(gcf,'input_vs_output_norm_smooth','png');
 
 offset_input = min(vop_all);
 offset_output = min(pv_smooth); % important that the offset uses the signal used after, not the original
+
+pv_smooth_all = [min(pv_smooth)*ones(1,length(pv_all)-length(pv_smooth)),pv_smooth];
+
 save([path 'M12_Grupo3_Presion_datos_depurados.mat'])
 csvwrite([path 'M12_Grupo3_Presion_datos_depurados.csv'],[time' vop' pv' pv_smooth'])
