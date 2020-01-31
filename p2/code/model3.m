@@ -247,13 +247,13 @@ id1.tm = id1.sys.ioDelay;
 % plot responses
 aux_fig = aux_fig + 1;
 figure(aux_fig)
-plot(time.ext,zn.out,'r-','LineWidth',2);
+plot(time.ext,zn.out,'y-','LineWidth',2);
 hold on
 plot(time.ext,miller.out,'g-','LineWidth',2);
 hold on
 plot(time.ext,smith.out,'b-','LineWidth',2);
 hold on
-plot(time.ext,alfaro.out,'y-','LineWidth',2);
+plot(time.ext,alfaro.out,'r-','LineWidth',2);
 hold on
 %plot(time.ext,broida.out,'r:','LineWidth',2);
 %hold on
@@ -425,9 +425,9 @@ plot(time.ext,sym.out,'b-','LineWidth',2);
 hold on
 plot(time.ext,stark.out,'g-','LineWidth',2);
 hold on
-plot(time.ext,jf.out,'c-','LineWidth',2);
+plot(time.ext,jf.out,'m-','LineWidth',2);
 hold on
-plot(time.ext,ho2.out,'m-','LineWidth',2);
+plot(time.ext,ho2.out,'c-','LineWidth',2);
 hold on
 %plot(time.ext,viteckova2.out,'r:','LineWidth',2);
 %hold on
