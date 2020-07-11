@@ -1,0 +1,1164 @@
+tic
+clock
+
+ans =
+
+   1.0e+03 *
+
+    2.0200    0.0010    0.0280    0.0120    0.0380    0.0576
+
+s = tf('s')
+
+s =
+ 
+  s
+ 
+Continuous-time transfer function.
+
+tau1 = 59.7
+
+tau1 =
+
+   59.7000
+
+tau2 = 22.3
+
+tau2 =
+
+   22.3000
+
+kp = 1.2
+
+kp =
+
+    1.2000
+
+G = tf(kp/((tau1*s+1)*(tau2*s+1)))
+
+G =
+ 
+          1.2
+  -------------------
+  1331 s^2 + 82 s + 1
+ 
+Continuous-time transfer function.
+
+Gss = tf2ss(G)
+{Error using <a href="matlab:helpUtils.errorDocCallback('tf2ss', 'C:\Program Files\MATLAB\R2013b\toolbox\shared\controllib\general\tf2ss.m', 34)" style="font-weight:bold">tf2ss</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2013b\toolbox\shared\controllib\general\tf2ss.m',34,0)">line 34</a>)
+Not enough input arguments.
+} 
+help tf2ss
+ <strong>tf2ss</strong>  Transfer function to state-space conversion.
+    [A,B,C,D] = <strong>tf2ss</strong>(NUM,DEN)  calculates the state-space 
+    representation:
+        .
+        x = Ax + Bu
+        y = Cx + Du
+ 
+    of the system:
+                NUM(s) 
+        H(s) = --------
+                DEN(s)
+ 
+    from a single input.  Vector DEN must contain the coefficients of
+    the denominator in descending powers of s.  Matrix NUM must 
+    contain the numerator coefficients with as many rows as there are
+    outputs y.  The A,B,C,D matrices are returned in controller 
+    canonical form.  This calculation also works for discrete systems.
+ 
+    For discrete-time transfer functions, it is highly recommended to
+    make the length of the numerator and denominator equal to ensure 
+    correct results.  You can do this using the function EQTFLENGTH in
+    the Signal Processing Toolbox.  However, this function only handles
+    single-input single-output systems.
+ 
+    See also <a href="matlab:help tf2zp">tf2zp</a>, <a href="matlab:help ss2tf">ss2tf</a>, <a href="matlab:help zp2ss">zp2ss</a>, <a href="matlab:help zp2tf">zp2tf</a>.
+
+    Reference page in Help browser
+       <a href="matlab:doc tf2ss">doc tf2ss</a>
+
+Gss = tf2ss(G.num,G.den)
+{Undefined function 'ne' for input arguments of type 'cell'.
+
+Error in <a href="matlab:helpUtils.errorDocCallback('tf2ss', 'C:\Program Files\MATLAB\R2013b\toolbox\shared\controllib\general\tf2ss.m', 47)" style="font-weight:bold">tf2ss</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2013b\toolbox\shared\controllib\general\tf2ss.m',47,0)">line 47</a>)
+inz = find(den ~= 0);
+} 
+Gss = tf2ss(G.num{1},G.den{1})
+
+Gss =
+
+   -0.0616   -0.0008
+    1.0000         0
+
+[Gss.a,Gss.b,Gss.c,Gss.d] = tf2ss(G.num{1},G.den{1})
+[Warning: Struct field assignment overwrites a value with class "double". See
+MATLAB R14SP2 Release Notes, Assigning Nonstructure Variables As Structures
+Displays Warning, for details.] 
+
+Gss = 
+
+    a: [2x2 double]
+    b: [2x1 double]
+    c: [0 9.0137e-04]
+    d: 0
+
+
+Gss = 
+
+    a: [2x2 double]
+    b: [2x1 double]
+    c: [0 9.0137e-04]
+    d: 0
+
+
+Gss = 
+
+    a: [2x2 double]
+    b: [2x1 double]
+    c: [0 9.0137e-04]
+    d: 0
+
+
+Gss = 
+
+    a: [2x2 double]
+    b: [2x1 double]
+    c: [0 9.0137e-04]
+    d: 0
+
+Gss.a
+
+ans =
+
+   -0.0616   -0.0008
+    1.0000         0
+
+help echo
+ <strong>echo</strong> Display statements during function execution.
+    <strong>echo</strong> ON turns on echoing of commands inside Script-files. 
+    <strong>echo</strong> OFF turns off echoing.
+    <strong>echo</strong> file ON where 'file' is a function name causes the
+       named Function-file to be echoed when it is used.
+    <strong>echo</strong> file OFF turns it off.
+    <strong>echo</strong> file toggles it.
+    <strong>echo</strong> ON ALL turns on the echoing of commands inside any
+       Function-files that are currently in memory (i.e., the
+       functions returned by INMEM).
+    <strong>echo</strong> OFF ALL turns them all off.
+ 
+    See also <a href="matlab:help function">function</a>, <a href="matlab:help script">script</a>.
+
+    Reference page in Help browser
+       <a href="matlab:doc echo">doc echo</a>
+
+GssMine.a = [0,1;-1/(tau1*tau2),-(tau1+tau2)/(tau1*tau2)]
+
+GssMine = 
+
+    a: [2x2 double]
+
+GssMine.b = [0;kp/(tau1*tau2)]
+
+GssMine = 
+
+    a: [2x2 double]
+    b: [2x1 double]
+
+GssMine.c = [1,0]
+
+GssMine = 
+
+    a: [2x2 double]
+    b: [2x1 double]
+    c: [1 0]
+
+GssMine.d = 0
+
+GssMine = 
+
+    a: [2x2 double]
+    b: [2x1 double]
+    c: [1 0]
+    d: 0
+
+GssMine.a
+
+ans =
+
+         0    1.0000
+   -0.0008   -0.0616
+
+num = G.num
+
+num = 
+
+    [1x3 double]
+
+num = G.num{1}
+
+num =
+
+         0         0    1.2000
+
+den = G.den{1}
+
+den =
+
+   1.0e+03 *
+
+    1.3313    0.0820    0.0010
+
+a = GssMine.a
+
+a =
+
+         0    1.0000
+   -0.0008   -0.0616
+
+b = GssMine.b
+
+b =
+
+   1.0e-03 *
+
+         0
+    0.9014
+
+c = GssMine.c
+
+c =
+
+     1     0
+
+d = GssMine.d
+
+d =
+
+     0
+
+Gptf = tf(num,den)
+
+Gptf =
+ 
+          1.2
+  -------------------
+  1331 s^2 + 82 s + 1
+ 
+Continuous-time transfer function.
+
+help ss
+ <strong>ss</strong>  Construct state-space model or convert model to state space.
+ 
+   Construction:
+     SYS = <strong>ss</strong>(A,B,C,D) creates an object SYS representing the continuous- 
+     time state-space model
+          dx/dt = Ax(t) + Bu(t)
+           y(t) = Cx(t) + Du(t)
+     You can set D=0 to mean the zero matrix of appropriate size. SYS is 
+     of type <strong>ss</strong> when A,B,C,D are numeric arrays, of type GENSS when 
+     A,B,C,D depend on tunable parameters (see REALP and GENMAT), and 
+     of type USS when A,B,C,D are uncertain matrices (requires Robust 
+     Control Toolbox).
+ 
+     SYS = <strong>ss</strong>(A,B,C,D,Ts) creates a discrete-time state-space model with
+     sampling time Ts (set Ts=-1 if the sampling time is undetermined).
+ 
+     SYS = <strong>ss</strong> creates an empty <strong>ss</strong> object.
+     SYS = <strong>ss</strong>(D) specifies a static gain matrix D.
+ 
+     You can set additional model properties by using name/value pairs.
+     For example,
+        sys = ss(-1,2,1,0,'InputDelay',0.7,'StateName','position')
+     also sets the input delay and the state name. Type "properties(ss)" 
+     for a complete list of model properties, and type 
+        help ss.<PropertyName>
+     for help on a particular property. For example, "help ss.StateName" 
+     provides information about the "StateName" property.
+ 
+   Arrays of state-space models:
+     You can create arrays of state-space models by using ND arrays for
+     A,B,C,D. The first two dimensions of A,B,C,D define the number of 
+     states, inputs, and outputs, while the remaining dimensions specify 
+     the array sizes. For example,
+        sys = ss(rand(2,2,3,4),[2;1],[1 1],0)
+     creates a 3x4 array of SISO state-space models. You can also use
+     indexed assignment and STACK to build <strong>ss</strong> arrays:
+        sys = ss(zeros(1,1,2))     % create 2x1 array of SISO models
+        sys(:,:,1) = rss(2)        % assign 1st model
+        sys(:,:,2) = ss(-1)        % assign 2nd model
+        sys = stack(1,sys,rss(5))  % add 3rd model to array
+ 
+   Conversion:
+     SYS = <strong>ss</strong>(SYS) converts any dynamic system SYS to the state-space 
+     representation. The resulting model SYS is always of class <strong>ss</strong>.
+ 
+     SYS = <strong>ss</strong>(SYS,'min') computes a minimal realization of SYS.
+ 
+     SYS = <strong>ss</strong>(SYS,'explicit') computes an explicit realization (E=I) of SYS.
+     An error is thrown if SYS is improper.
+ 
+     See also <a href="matlab:help dss">dss</a>, <a href="matlab:help delayss">delayss</a>, <a href="matlab:help rss">rss</a>, <a href="matlab:help drss">drss</a>, <a href="matlab:help ss/ssdata">ssdata</a>, <a href="matlab:help tf">tf</a>, <a href="matlab:help zpk">zpk</a>, <a href="matlab:help frd">frd</a>, <a href="matlab:help genss">genss</a>, USS, <a href="matlab:help DynamicSystem">DynamicSystem</a>.
+
+    Overloaded methods:
+       <a href="matlab:help DynamicSystem/ss">DynamicSystem/ss</a>
+       <a href="matlab:help idParametric/ss">idParametric/ss</a>
+       <a href="matlab:help StaticModel/ss">StaticModel/ss</a>
+       <a href="matlab:help dfilt.ss">dfilt.ss</a>
+
+    Reference page in Help browser
+       <a href="matlab:doc ss">doc ss</a>
+
+Gpss = ss(a,b,c,d)
+
+Gpss =
+ 
+  a = 
+               x1          x2
+   x1           0           1
+   x2  -0.0007511    -0.06159
+ 
+  b = 
+              u1
+   x1          0
+   x2  0.0009014
+ 
+  c = 
+       x1  x2
+   y1   1   0
+ 
+  d = 
+       u1
+   y1   0
+ 
+Continuous-time state-space model.
+
+step(0.23*Gptf)
+figure
+step(0.23*Gpss)
+figure
+step(0.23*Gptf)
+0.23*1.2
+
+ans =
+
+    0.2760
+
+get(Gpss)
+                a: [2x2 double]
+                b: [2x1 double]
+                c: [1 0]
+                d: 0
+                e: []
+           Scaled: 0
+        StateName: {2x1 cell}
+        StateUnit: {2x1 cell}
+    InternalDelay: [0x1 double]
+       InputDelay: 0
+      OutputDelay: 0
+               Ts: 0
+         TimeUnit: 'seconds'
+        InputName: {''}
+        InputUnit: {''}
+       InputGroup: [1x1 struct]
+       OutputName: {''}
+       OutputUnit: {''}
+      OutputGroup: [1x1 struct]
+             Name: ''
+            Notes: {}
+         UserData: []
+     SamplingGrid: [1x1 struct]
+
+get(Gptf)
+             num: {[0 0 1.2000]}
+             den: {[1.3313e+03 82 1]}
+        Variable: 's'
+         ioDelay: 0
+      InputDelay: 0
+     OutputDelay: 0
+              Ts: 0
+        TimeUnit: 'seconds'
+       InputName: {''}
+       InputUnit: {''}
+      InputGroup: [1x1 struct]
+      OutputName: {''}
+      OutputUnit: {''}
+     OutputGroup: [1x1 struct]
+            Name: ''
+           Notes: {}
+        UserData: []
+    SamplingGrid: [1x1 struct]
+
+Gptfm = Gptf
+
+Gptfm =
+ 
+          1.2
+  -------------------
+  1331 s^2 + 82 s + 1
+ 
+Continuous-time transfer function.
+
+Gpssm = Gpss
+
+Gpssm =
+ 
+  a = 
+               x1          x2
+   x1           0           1
+   x2  -0.0007511    -0.06159
+ 
+  b = 
+              u1
+   x1          0
+   x2  0.0009014
+ 
+  c = 
+       x1  x2
+   y1   1   0
+ 
+  d = 
+       u1
+   y1   0
+ 
+Continuous-time state-space model.
+
+Gptfm.OutputDelay = 39.2
+
+Gptfm =
+ 
+                         1.2
+  exp(-39.2*s) * -------------------
+                 1331 s^2 + 82 s + 1
+ 
+Continuous-time transfer function.
+
+Gpssm.OutputDelay = 39.2
+
+Gpssm =
+ 
+  a = 
+               x1          x2
+   x1           0           1
+   x2  -0.0007511    -0.06159
+ 
+  b = 
+              u1
+   x1          0
+   x2  0.0009014
+ 
+  c = 
+       x1  x2
+   y1   1   0
+ 
+  d = 
+       u1
+   y1   0
+ 
+  Output delays (seconds): 39.2 
+ 
+Continuous-time state-space model.
+
+get(Gpssm)
+                a: [2x2 double]
+                b: [2x1 double]
+                c: [1 0]
+                d: 0
+                e: []
+           Scaled: 0
+        StateName: {2x1 cell}
+        StateUnit: {2x1 cell}
+    InternalDelay: [0x1 double]
+       InputDelay: 0
+      OutputDelay: 39.2000
+               Ts: 0
+         TimeUnit: 'seconds'
+        InputName: {''}
+        InputUnit: {''}
+       InputGroup: [1x1 struct]
+       OutputName: {''}
+       OutputUnit: {''}
+      OutputGroup: [1x1 struct]
+             Name: ''
+            Notes: {}
+         UserData: []
+     SamplingGrid: [1x1 struct]
+
+get(Gptfm)
+             num: {[0 0 1.2000]}
+             den: {[1.3313e+03 82 1]}
+        Variable: 's'
+         ioDelay: 0
+      InputDelay: 0
+     OutputDelay: 39.2000
+              Ts: 0
+        TimeUnit: 'seconds'
+       InputName: {''}
+       InputUnit: {''}
+      InputGroup: [1x1 struct]
+      OutputName: {''}
+      OutputUnit: {''}
+     OutputGroup: [1x1 struct]
+            Name: ''
+           Notes: {}
+        UserData: []
+    SamplingGrid: [1x1 struct]
+
+figure
+help subplot
+ <strong>subplot</strong> Create axes in tiled positions.
+    H = <strong>subplot</strong>(m,n,p), or <strong>subplot</strong>(mnp), breaks the Figure window
+    into an m-by-n matrix of small axes, selects the p-th axes for
+    the current plot, and returns the axes handle.  The axes are
+    counted along the top row of the Figure window, then the second
+    row, etc.  For example,
+ 
+        <strong>subplot</strong>(2,1,1), PLOT(income)
+        <strong>subplot</strong>(2,1,2), PLOT(outgo)
+ 
+    plots income on the top half of the window and outgo on the
+    bottom half. If the CurrentAxes is nested in a uipanel the
+    panel is used as the parent for the subplot instead of the
+    current figure.
+ 
+    <strong>subplot</strong>(m,n,p), if the axes already exists, makes it current.
+    <strong>subplot</strong>(m,n,p,'replace'), if the axes already exists, deletes it and
+    creates a new axes.
+    <strong>subplot</strong>(m,n,p,'align') places the axes so that the plot boxes
+    are aligned, but does not prevent the labels and ticks from
+    overlapping.
+    <strong>subplot</strong>(m,n,P), where P is a vector, specifies an axes position
+    that covers all the subplot positions listed in P.
+    <strong>subplot</strong>(H), where H is an axes handle, is another way of making
+    an axes current for subsequent plotting commands.
+ 
+    <strong>subplot</strong>('position',[left bottom width height]) creates an
+    axes at the specified position in normalized coordinates (in
+    in the range from 0.0 to 1.0).
+ 
+    <strong>subplot</strong>(..., PROP1, VALUE1, PROP2, VALUE2, ...) sets the
+    specified property-value pairs on the subplot axes. To add the
+    subplot to a specific figure pass the figure handle as the
+    value for the 'Parent' property.
+ 
+    If a <strong>subplot</strong> specification causes a new axes to overlap an
+    existing axes, the existing axes is deleted - unless the position
+    of the new and existing axes are identical.  For example,
+    the statement <strong>subplot</strong>(1,2,1) deletes all existing axes overlapping
+    the left side of the Figure window and creates a new axes on that
+    side - unless there is an axes there with a position that exactly
+    matches the position of the new axes (and 'replace' was not specified),
+    in which case all other overlapping axes will be deleted and the
+    matching axes will become the current axes.
+ 
+    <strong>subplot</strong>(111) is an exception to the rules above, and is not
+    identical in behavior to <strong>subplot</strong>(1,1,1).  For reasons of backwards
+    compatibility, it is a special case of subplot which does not
+    immediately create an axes, but instead sets up the figure so that
+    the next graphics command executes CLF RESET in the figure
+    (deleting all children of the figure), and creates a new axes in
+    the default position.  This syntax does not return a handle, so it
+    is an error to specify a return argument.  The delayed CLF RESET
+    is accomplished by setting the figure's NextPlot to 'replace'.
+ 
+    Be aware when creating subplots from scripts that the Position
+    property of subplots is not finalized until either a drawnow
+    command is issued, or MATLAB returns to await a user command.
+    That is, the value obtained for subplot i by the command
+    get(h(i),'Position') will not be correct until the script
+    refreshes the plot or exits.
+ 
+    See also  <a href="matlab:help gca">gca</a>, <a href="matlab:help gcf">gcf</a>, <a href="matlab:help axes">axes</a>, <a href="matlab:help figure">figure</a>, <a href="matlab:help uipanel">uipanel</a>
+
+    Reference page in Help browser
+       <a href="matlab:doc subplot">doc subplot</a>
+
+subplot(2,1,1)
+step(0.23*Gptfm)
+subplot(2,1,2)
+step(0.23*Gpssm)
+help tfdata
+ --- help for <strong>DynamicSystem/tfdata</strong> ---
+
+ <strong>tfdata</strong>  Quick access to transfer function data.
+ 
+    [NUM,DEN] = <strong>tfdata</strong>(SYS) returns the numerator(s) and denominator(s) 
+    of the transfer function SYS. For a transfer function with NY outputs 
+    and NU inputs, NUM and DEN are NY-by-NU cell arrays where the (I,J) 
+    entry specifies the transfer function from input J to output I. 
+    SYS is first converted to transfer function if necessary.
+ 
+    [NUM,DEN,TS] = <strong>tfdata</strong>(SYS) also returns the sampling time TS. Other
+    properties of SYS can be accessed using struct-like dot syntax (for
+    example, SYS.ioDelay).
+ 
+    [NUM,DEN,TS,SDNUM,SDDEN] = <strong>tfdata</strong>(SYS) also returns the uncertainties in
+    the numerator and denominator coefficients of identified system SYS.
+    SDNUM{i,j}(k) is the 1 std uncertainty in the value NUM{i,j}(k) and
+    SDDEN{i,j}(k) is the 1 std uncertainty in the value DEN{i,j}(k). If SYS
+    does not contain uncertainty information, SDNUM and SDDEN are [].
+ 
+    For a single SISO model SYS, the syntax
+        [NUM,DEN] = <strong>tfdata</strong>(SYS,'v')
+    returns the numerator and denominator as row vectors rather than
+    cell arrays.
+ 
+    [NUM,DEN,TS,...] = <strong>tfdata</strong>(SYS,J1,...,JN) extracts the data for the
+    (J1,...,JN) entry in the model array SYS.
+ 
+    See also <a href="matlab:help DynamicSystem/tf">tf</a>, <a href="matlab:help DynamicSystem/zpkdata">zpkdata</a>, <a href="matlab:help DynamicSystem/ssdata">ssdata</a>, <a href="matlab:help DynamicSystem/idtf">idtf</a>.
+
+[numDT,denDT] = tfdata(Gptfm)
+
+numDT = 
+
+    [1x3 double]
+
+
+denDT = 
+
+    [1x3 double]
+
+tfDT = Gptfm.OuputDelay
+{Error using <a href="matlab:helpUtils.errorDocCallback('InputOutputModel/subsref', 'C:\Program Files\MATLAB\R2013b\toolbox\shared\controllib\engine\@InputOutputModel\subsref.m', 44)" style="font-weight:bold">InputOutputModel/subsref</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2013b\toolbox\shared\controllib\engine\@InputOutputModel\subsref.m',44,0)">line 44</a>)
+No property of the class "tf" matches the string "OuputDelay". Use PROPERTIES to
+get the list of properties for this class.
+} 
+tfDT = Gptfm.OutputDelay
+
+tfDT =
+
+   39.2000
+
+ssDT = Gpssm.OutputDelay
+
+ssDT =
+
+   39.2000
+
+[aDT,bDT,cDT,dDt] = ssdata(Gpssm)
+
+aDT =
+
+         0    1.0000
+   -0.0008   -0.0616
+
+
+bDT =
+
+   1.0e-03 *
+
+         0
+    0.9014
+
+
+cDT =
+
+     1     0
+
+
+dDt =
+
+     0
+
+GpssmPoles = pole(Gpssm)
+
+GpssmPoles =
+
+   -0.0168
+   -0.0448
+
+GptfmPoles = pole(Gptfm)
+
+GptfmPoles =
+
+   -0.0448
+   -0.0168
+
+GptfPoles = pole(Gptf)
+
+GptfPoles =
+
+   -0.0448
+   -0.0168
+
+GpssPoles = pole(Gpss)
+
+GpssPoles =
+
+   -0.0168
+   -0.0448
+
+help zero
+ --- help for <strong>DynamicSystem/zero</strong> ---
+
+ <strong>zero</strong>  Computes zeros and gain of a SISO linear system.
+  
+    [Z,G] = <strong>zero</strong>(SYS) computes the zeros Z and gain G of the single-input,
+    single-output dynamic system SYS. The zero values are expressed in the 
+    reciprocal of the time units of SYS (for example, 1/minutes if 
+    SYS.TimeUnit = 'minutes').
+    
+    [Z,G] = <strong>zero</strong>(SYS,J1,...,JN) computes the zeros and gains of the model 
+    with subscripts (J1,...,JN) in the model array SYS. 
+ 
+    Note: Use TZERO to compute the invariant zeros or the transmission  
+          zeros of SYS.
+ 
+    See also <a href="matlab:help DynamicSystem/tzero">tzero</a>, <a href="matlab:help DynamicSystem/damp">damp</a>, <a href="matlab:help DynamicSystem/pole">pole</a>, <a href="matlab:help DynamicSystem/pzmap">pzmap</a>, <a href="matlab:help DynamicSystem/iopzmap">iopzmap</a>, <a href="matlab:help DynamicSystem/zpk">zpk</a>, <a href="matlab:help lti">lti</a>, <a href="matlab:help DynamicSystem">DynamicSystem</a>.
+
+GptfmZeros = zero(Gptfm)
+
+GptfmZeros =
+
+   Empty matrix: 0-by-1
+
+GpssmZeros = zero(Gpssm)
+
+GpssmZeros =
+
+   Empty matrix: 0-by-1
+
+help eig
+ <strong>eig</strong>    Eigenvalues and eigenvectors.
+    E = <strong>eig</strong>(X) is a vector containing the eigenvalues of a square 
+    matrix X.
+ 
+    [V,D] = <strong>eig</strong>(X) produces a diagonal matrix D of eigenvalues and a
+    full matrix V whose columns are the corresponding eigenvectors so
+    that X*V = V*D.
+ 
+    [V,D] = <strong>eig</strong>(X,'nobalance') performs the computation with balancing
+    disabled, which sometimes gives more accurate results for certain
+    problems with unusual scaling. If X is symmetric, <strong>eig</strong>(X,'nobalance')
+    is ignored since X is already balanced.
+ 
+    E = <strong>eig</strong>(A,B) is a vector containing the generalized eigenvalues
+    of square matrices A and B.
+ 
+    [V,D] = <strong>eig</strong>(A,B) produces a diagonal matrix D of generalized
+    eigenvalues and a full matrix V whose columns are the
+    corresponding eigenvectors so that A*V = B*V*D.
+ 
+    <strong>eig</strong>(A,B,'chol') is the same as <strong>eig</strong>(A,B) for symmetric A and symmetric
+    positive definite B.  It computes the generalized eigenvalues of A and B
+    using the Cholesky factorization of B.
+    <strong>eig</strong>(A,B,'qz') ignores the symmetry of A and B and uses the QZ algorithm.
+    In general, the two algorithms return the same result, however using the
+    QZ algorithm may be more stable for certain problems.
+    The flag is ignored when A and B are not symmetric.
+ 
+    See also <a href="matlab:help condeig">condeig</a>, <a href="matlab:help eigs">eigs</a>, <a href="matlab:help ordeig">ordeig</a>.
+
+    Overloaded methods:
+       <a href="matlab:help DynamicSystem/eig">DynamicSystem/eig</a>
+       <a href="matlab:help codistributed/eig">codistributed/eig</a>
+       <a href="matlab:help gpuArray/eig">gpuArray/eig</a>
+       <a href="matlab:help sym/eig">sym/eig</a>
+
+    Reference page in Help browser
+       <a href="matlab:doc eig">doc eig</a>
+
+help poly
+ <strong>poly</strong> Convert roots to polynomial.
+    <strong>poly</strong>(A), when A is an N by N matrix, is a row vector with
+    N+1 elements which are the coefficients of the
+    characteristic polynomial, DET(lambda*EYE(SIZE(A)) - A) .
+ 
+    <strong>poly</strong>(V), when V is a vector, is a vector whose elements are
+    the coefficients of the polynomial whose roots are the
+    elements of V . For vectors, ROOTS and <strong>poly</strong> are inverse
+    functions of each other, up to ordering, scaling, and
+    roundoff error.
+ 
+    ROOTS(<strong>poly</strong>(1:20)) generates Wilkinson's famous example.
+ 
+    Class support for inputs A,V:
+       float: double, single
+ 
+    See also <a href="matlab:help roots">roots</a>, <a href="matlab:help conv">conv</a>, <a href="matlab:help residue">residue</a>, <a href="matlab:help polyval">polyval</a>.
+
+    Reference page in Help browser
+       <a href="matlab:doc poly">doc poly</a>
+
+poly(GpssmPoles)
+
+ans =
+
+    1.0000    0.0616    0.0008
+
+doc eig
+dcgain(Gptfm)
+
+ans =
+
+    1.2000
+
+eig(aDT)
+
+ans =
+
+   -0.0168
+   -0.0448
+
+systf = tf(Gpss)
+
+systf =
+ 
+           0.0009014
+  ---------------------------
+  s^2 + 0.06159 s + 0.0007511
+ 
+Continuous-time transfer function.
+
+sysss=ss(Gptf)
+
+sysss =
+ 
+  a = 
+             x1        x2
+   x1  -0.06159  -0.02404
+   x2   0.03125         0
+ 
+  b = 
+          u1
+   x1  0.125
+   x2      0
+ 
+  c = 
+           x1      x2
+   y1       0  0.2308
+ 
+  d = 
+       u1
+   y1   0
+ 
+Continuous-time state-space model.
+
+syszpk=zpk(Gptf)
+
+syszpk =
+ 
+        0.00090137
+  -----------------------
+  (s+0.04484) (s+0.01675)
+ 
+Continuous-time zero/pole/gain model.
+
+Gptf
+
+Gptf =
+ 
+          1.2
+  -------------------
+  1331 s^2 + 82 s + 1
+ 
+Continuous-time transfer function.
+
+systf
+
+systf =
+ 
+           0.0009014
+  ---------------------------
+  s^2 + 0.06159 s + 0.0007511
+ 
+Continuous-time transfer function.
+
+Gpss
+
+Gpss =
+ 
+  a = 
+               x1          x2
+   x1           0           1
+   x2  -0.0007511    -0.06159
+ 
+  b = 
+              u1
+   x1          0
+   x2  0.0009014
+ 
+  c = 
+       x1  x2
+   y1   1   0
+ 
+  d = 
+       u1
+   y1   0
+ 
+Continuous-time state-space model.
+
+sysss
+
+sysss =
+ 
+  a = 
+             x1        x2
+   x1  -0.06159  -0.02404
+   x2   0.03125         0
+ 
+  b = 
+          u1
+   x1  0.125
+   x2      0
+ 
+  c = 
+           x1      x2
+   y1       0  0.2308
+ 
+  d = 
+       u1
+   y1   0
+ 
+Continuous-time state-space model.
+
+figure
+step(Gptfm)
+poles = GptfmPoles
+
+poles =
+
+   -0.0448
+   -0.0168
+
+Gc = 0.3*((s+poles(1))(s+poles(2)))/(s*tfDT+1)
+ Gc = 0.3*((s+poles(1))(s+poles(2)))/(s*tfDT+1)
+                       |
+{Error: Unbalanced or unexpected parenthesis or bracket.
+} 
+Gc = 0.3*((s+poles(1))(s+poles(2)))/(s*tfDT+1)
+ Gc = 0.3*((s+poles(1))(s+poles(2)))/(s*tfDT+1)
+                       |
+{Error: Unbalanced or unexpected parenthesis or bracket.
+} 
+Gc = 0.3*(s+poles(1))*(s+poles(2))/(s*tfDT+1)
+
+Gc =
+ 
+  0.3 s^2 - 0.01848 s + 0.0002253
+  -------------------------------
+            39.2 s + 1
+ 
+Continuous-time transfer function.
+
+Gc = 0.3*((s+poles(1))*(s+poles(2)))/(s*tfDT+1)
+
+Gc =
+ 
+  0.3 s^2 - 0.01848 s + 0.0002253
+  -------------------------------
+            39.2 s + 1
+ 
+Continuous-time transfer function.
+
+Gctf = tf(Gc)
+
+Gctf =
+ 
+  0.3 s^2 - 0.01848 s + 0.0002253
+  -------------------------------
+            39.2 s + 1
+ 
+Continuous-time transfer function.
+
+Gatfm = minreal(Gctf*Gptfm)
+
+Gatfm =
+ 
+                  6.898e-06 s^2 - 4.249e-07 s + 5.182e-09
+  exp(-39.2*s) * -----------------------------------------
+                 s^3 + 0.0871 s^2 + 0.002322 s + 1.916e-05
+ 
+Continuous-time transfer function.
+
+figure
+step(Gptfm)
+figure
+step(Gatfm)
+step(Gatfm)
+Gatfm
+
+Gatfm =
+ 
+                  6.898e-06 s^2 - 4.249e-07 s + 5.182e-09
+  exp(-39.2*s) * -----------------------------------------
+                 s^3 + 0.0871 s^2 + 0.002322 s + 1.916e-05
+ 
+Continuous-time transfer function.
+
+Gc = 0.3*(s-poles(1))*(s-poles(2))/(s*tfDT+1)
+
+Gc =
+ 
+  0.3 s^2 + 0.01848 s + 0.0002253
+  -------------------------------
+            39.2 s + 1
+ 
+Continuous-time transfer function.
+
+Gctf = tf(Gc)
+
+Gctf =
+ 
+  0.3 s^2 + 0.01848 s + 0.0002253
+  -------------------------------
+            39.2 s + 1
+ 
+Continuous-time transfer function.
+
+Gatfm = minreal(Gctf*Gptfm)
+
+Gatfm =
+ 
+                  6.898e-06
+  exp(-39.2*s) * -----------
+                 s + 0.02551
+ 
+Continuous-time transfer function.
+
+step(Gatfm)
+Gatfm
+
+Gatfm =
+ 
+                  6.898e-06
+  exp(-39.2*s) * -----------
+                 s + 0.02551
+ 
+Continuous-time transfer function.
+
+Gptfm
+
+Gptfm =
+ 
+                         1.2
+  exp(-39.2*s) * -------------------
+                 1331 s^2 + 82 s + 1
+ 
+Continuous-time transfer function.
+
+figure
+Gref = Gatfm/(1+Gatfm)
+
+Gref =
+ 
+  a = 
+               x1          x2
+   x1    -0.02551  -6.898e-06
+   x2           0    -0.02552
+ 
+  b = 
+             u1
+   x1  0.001953
+   x2  0.001953
+ 
+  c = 
+             x1        x2
+   y1  0.003532         0
+ 
+  d = 
+       u1
+   y1   0
+ 
+  (values computed with all internal delays set to zero)
+
+  Internal delays (seconds): 39.2  39.2 
+ 
+Continuous-time state-space model.
+
+Gper = Gptfm/(1+Gatfm)
+
+Gper =
+ 
+  a = 
+               x1          x2          x3
+   x1    -0.06159    -0.02404  -0.0004415
+   x2     0.03125           0           0
+   x3           0           0    -0.02552
+ 
+  b = 
+             u1
+   x1     0.125
+   x2         0
+   x3  0.001953
+ 
+  c = 
+           x1      x2      x3
+   y1       0  0.2308       0
+ 
+  d = 
+       u1
+   y1   0
+ 
+  (values computed with all internal delays set to zero)
+
+  Output delays (seconds): 39.2 
+  Internal delays (seconds): 39.2 
+ 
+Continuous-time state-space model.
+
+subplot(2,1,1)
+step(Gref)
+subplot(2,1,2)
+step(Gper)
+Gc2 = 0.2*(s-poles(1))*(s-poles(2))/(s*tfDT+1)
+
+Gc2 =
+ 
+  0.2 s^2 + 0.01232 s + 0.0001502
+  -------------------------------
+            39.2 s + 1
+ 
+Continuous-time transfer function.
+
+Gatfm2 = minreal(Gc2*Gptfm)
+
+Gatfm2 =
+ 
+                  4.599e-06
+  exp(-39.2*s) * -----------
+                 s + 0.02551
+ 
+Continuous-time transfer function.
+
+Gref2 = Gatfm2/(1+Gatfm2)
+
+Gref2 =
+ 
+  a = 
+               x1          x2
+   x1    -0.02551  -4.599e-06
+   x2           0    -0.02551
+ 
+  b = 
+             u1
+   x1  0.001953
+   x2  0.001953
+ 
+  c = 
+             x1        x2
+   y1  0.002355         0
+ 
+  d = 
+       u1
+   y1   0
+ 
+  (values computed with all internal delays set to zero)
+
+  Internal delays (seconds): 39.2  39.2 
+ 
+Continuous-time state-space model.
+
+figure
+step(Gref2)
+diary off
+clock
+
+ans =
+
+   1.0e+03 *
+
+    2.0200    0.0010    0.0280    0.0150    0.0080    0.0496
+
+toc
+Elapsed time is 8996.297979 seconds.

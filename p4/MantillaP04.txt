@@ -1,0 +1,241 @@
+tic
+clock
+
+ans =
+
+   1.0e+03 *
+
+    2.0200    0.0060    0.0110    0.0060    0.0180    0.0408
+
+simulink
+whos
+  Name      Size            Bytes  Class     Attributes
+
+  ans       1x6                48  double              
+
+clear ans
+[Warning: Using a default value of 0.2 for maximum step size.  The simulation step
+size will be equal to or less than this value.  You can disable this diagnostic by
+setting 'Automatic solver parameter selection' diagnostic to 'none' in the
+Diagnostics page of the configuration parameters dialog] 
+y = yout.signals(1).values;
+t = yout.time;
+plot(t,y)
+whos
+  Name         Size            Bytes  Class         Attributes
+
+  simout       1x1              1780  timeseries              
+  t           57x1               456  double                  
+  tout        57x1               456  double                  
+  xout         1x1              4016  struct                  
+  y           57x1               456  double                  
+  yout         1x1              2002  struct                  
+
+clear yout y xout tout t simout
+[ts,xs,ys]=sim('ejemplo1',30);
+[Warning: Using a default value of 0.6 for maximum step size.  The simulation step
+size will be equal to or less than this value.  You can disable this diagnostic by
+setting 'Automatic solver parameter selection' diagnostic to 'none' in the
+Diagnostics page of the configuration parameters dialog] 
+[ts,xs,ys]=sim('ejemplo1',5);
+[Warning: Using a default value of 0.1 for maximum step size.  The simulation step
+size will be equal to or less than this value.  You can disable this diagnostic by
+setting 'Automatic solver parameter selection' diagnostic to 'none' in the
+Diagnostics page of the configuration parameters dialog] 
+[ts,xs,ys]=sim('ejemplo1');
+[Warning: Using a default value of 0.2 for maximum step size.  The simulation step
+size will be equal to or less than this value.  You can disable this diagnostic by
+setting 'Automatic solver parameter selection' diagnostic to 'none' in the
+Diagnostics page of the configuration parameters dialog] 
+[ts,xs,ys]=sim('ejemplo1',5);
+[Warning: Using a default value of 0.1 for maximum step size.  The simulation step
+size will be equal to or less than this value.  You can disable this diagnostic by
+setting 'Automatic solver parameter selection' diagnostic to 'none' in the
+Diagnostics page of the configuration parameters dialog] 
+[ts,xs,ys]=sim('ejemplo1');
+[Warning: Using a default value of 0.2 for maximum step size.  The simulation step
+size will be equal to or less than this value.  You can disable this diagnostic by
+setting 'Automatic solver parameter selection' diagnostic to 'none' in the
+Diagnostics page of the configuration parameters dialog] 
+[ts,xs,ys]=sim('ejemplo1',5);
+[Warning: Using a default value of 0.1 for maximum step size.  The simulation step
+size will be equal to or less than this value.  You can disable this diagnostic by
+setting 'Automatic solver parameter selection' diagnostic to 'none' in the
+Diagnostics page of the configuration parameters dialog] 
+[ts,xs,ys]=sim('ejemplo1');
+[Warning: Using a default value of 0.2 for maximum step size.  The simulation step
+size will be equal to or less than this value.  You can disable this diagnostic by
+setting 'Automatic solver parameter selection' diagnostic to 'none' in the
+Diagnostics page of the configuration parameters dialog] 
+ejemplo2m
+[Warning: Using a default value of 0.198 for maximum step size.  The simulation
+step size will be equal to or less than this value.  You can disable this
+diagnostic by setting 'Automatic solver parameter selection' diagnostic to 'none'
+in the Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Users\user\Documents\MATLAB\ejemplo2m.m',19,1)">ejemplo2m at 19</a>] 
+[Warning: Using a default value of 0.198 for maximum step size.  The simulation
+step size will be equal to or less than this value.  You can disable this
+diagnostic by setting 'Automatic solver parameter selection' diagnostic to 'none'
+in the Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Users\user\Documents\MATLAB\ejemplo2m.m',19,1)">ejemplo2m at 19</a>] 
+[Warning: Using a default value of 0.198 for maximum step size.  The simulation
+step size will be equal to or less than this value.  You can disable this
+diagnostic by setting 'Automatic solver parameter selection' diagnostic to 'none'
+in the Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Users\user\Documents\MATLAB\ejemplo2m.m',19,1)">ejemplo2m at 19</a>] 
+[Warning: Using a default value of 0.198 for maximum step size.  The simulation
+step size will be equal to or less than this value.  You can disable this
+diagnostic by setting 'Automatic solver parameter selection' diagnostic to 'none'
+in the Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Users\user\Documents\MATLAB\ejemplo2m.m',19,1)">ejemplo2m at 19</a>] 
+[Warning: Using a default value of 0.198 for maximum step size.  The simulation
+step size will be equal to or less than this value.  You can disable this
+diagnostic by setting 'Automatic solver parameter selection' diagnostic to 'none'
+in the Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Users\user\Documents\MATLAB\ejemplo2m.m',19,1)">ejemplo2m at 19</a>] 
+[Warning: Using a default value of 0.198 for maximum step size.  The simulation
+step size will be equal to or less than this value.  You can disable this
+diagnostic by setting 'Automatic solver parameter selection' diagnostic to 'none'
+in the Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Users\user\Documents\MATLAB\ejemplo2m.m',19,1)">ejemplo2m at 19</a>] 
+[Warning: Using a default value of 0.198 for maximum step size.  The simulation
+step size will be equal to or less than this value.  You can disable this
+diagnostic by setting 'Automatic solver parameter selection' diagnostic to 'none'
+in the Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Users\user\Documents\MATLAB\ejemplo2m.m',19,1)">ejemplo2m at 19</a>] 
+ejemplo2m
+[Warning: Using a default value of 0.198 for maximum step size.  The simulation
+step size will be equal to or less than this value.  You can disable this
+diagnostic by setting 'Automatic solver parameter selection' diagnostic to 'none'
+in the Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Users\user\Documents\MATLAB\ejemplo2m.m',19,1)">ejemplo2m at 19</a>] 
+[Warning: Using a default value of 0.198 for maximum step size.  The simulation
+step size will be equal to or less than this value.  You can disable this
+diagnostic by setting 'Automatic solver parameter selection' diagnostic to 'none'
+in the Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Users\user\Documents\MATLAB\ejemplo2m.m',19,1)">ejemplo2m at 19</a>] 
+[Warning: Using a default value of 0.198 for maximum step size.  The simulation
+step size will be equal to or less than this value.  You can disable this
+diagnostic by setting 'Automatic solver parameter selection' diagnostic to 'none'
+in the Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Users\user\Documents\MATLAB\ejemplo2m.m',19,1)">ejemplo2m at 19</a>] 
+[Warning: Using a default value of 0.198 for maximum step size.  The simulation
+step size will be equal to or less than this value.  You can disable this
+diagnostic by setting 'Automatic solver parameter selection' diagnostic to 'none'
+in the Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Users\user\Documents\MATLAB\ejemplo2m.m',19,1)">ejemplo2m at 19</a>] 
+[Warning: Using a default value of 0.198 for maximum step size.  The simulation
+step size will be equal to or less than this value.  You can disable this
+diagnostic by setting 'Automatic solver parameter selection' diagnostic to 'none'
+in the Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Users\user\Documents\MATLAB\ejemplo2m.m',19,1)">ejemplo2m at 19</a>] 
+[Warning: Using a default value of 0.198 for maximum step size.  The simulation
+step size will be equal to or less than this value.  You can disable this
+diagnostic by setting 'Automatic solver parameter selection' diagnostic to 'none'
+in the Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Users\user\Documents\MATLAB\ejemplo2m.m',19,1)">ejemplo2m at 19</a>] 
+[Warning: Using a default value of 0.198 for maximum step size.  The simulation
+step size will be equal to or less than this value.  You can disable this
+diagnostic by setting 'Automatic solver parameter selection' diagnostic to 'none'
+in the Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Users\user\Documents\MATLAB\ejemplo2m.m',19,1)">ejemplo2m at 19</a>] 
+sys=linmod('ejemplo2')
+[Warning: Using a default value of 0.2 for maximum step size.  The simulation step
+size will be equal to or less than this value.  You can disable this diagnostic by
+setting 'Automatic solver parameter selection' diagnostic to 'none' in the
+Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Program Files\MATLAB\R2013b\toolbox\simulink\simulink\dlinmod.m',195,1)">dlinmod at 195</a>
+  In <a href="matlab: opentoline('C:\Program Files\MATLAB\R2013b\toolbox\simulink\simulink\linmod.m',60,1)">linmod at 60</a>] 
+
+sys = 
+
+             a: [3x3 double]
+             b: [3x1 double]
+             c: [0 1 0]
+             d: 0
+     StateName: {3x1 cell}
+    OutputName: {'ejemplo2/Out1'}
+     InputName: {'ejemplo2/In1'}
+     OperPoint: [1x1 struct]
+            Ts: 0
+
+[Warning: Using a default value of 0.2 for maximum step size.  The simulation step
+size will be equal to or less than this value.  You can disable this diagnostic by
+setting 'Automatic solver parameter selection' diagnostic to 'none' in the
+Diagnostics page of the configuration parameters dialog] 
+[Warning: Using a default value of 0.2 for maximum step size.  The simulation step
+size will be equal to or less than this value.  You can disable this diagnostic by
+setting 'Automatic solver parameter selection' diagnostic to 'none' in the
+Diagnostics page of the configuration parameters dialog] 
+[Warning: Using a default value of 0.2 for maximum step size.  The simulation step
+size will be equal to or less than this value.  You can disable this diagnostic by
+setting 'Automatic solver parameter selection' diagnostic to 'none' in the
+Diagnostics page of the configuration parameters dialog] 
+ejemplo2m
+[Warning: Using a default value of 0.198 for maximum step size.  The simulation
+step size will be equal to or less than this value.  You can disable this
+diagnostic by setting 'Automatic solver parameter selection' diagnostic to 'none'
+in the Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Users\user\Documents\MATLAB\ejemplo2m.m',19,1)">ejemplo2m at 19</a>] 
+[Warning: Using a default value of 0.198 for maximum step size.  The simulation
+step size will be equal to or less than this value.  You can disable this
+diagnostic by setting 'Automatic solver parameter selection' diagnostic to 'none'
+in the Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Users\user\Documents\MATLAB\ejemplo2m.m',19,1)">ejemplo2m at 19</a>] 
+[Warning: Using a default value of 0.198 for maximum step size.  The simulation
+step size will be equal to or less than this value.  You can disable this
+diagnostic by setting 'Automatic solver parameter selection' diagnostic to 'none'
+in the Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Users\user\Documents\MATLAB\ejemplo2m.m',19,1)">ejemplo2m at 19</a>] 
+[Warning: Using a default value of 0.198 for maximum step size.  The simulation
+step size will be equal to or less than this value.  You can disable this
+diagnostic by setting 'Automatic solver parameter selection' diagnostic to 'none'
+in the Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Users\user\Documents\MATLAB\ejemplo2m.m',19,1)">ejemplo2m at 19</a>] 
+[Warning: Using a default value of 0.198 for maximum step size.  The simulation
+step size will be equal to or less than this value.  You can disable this
+diagnostic by setting 'Automatic solver parameter selection' diagnostic to 'none'
+in the Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Users\user\Documents\MATLAB\ejemplo2m.m',19,1)">ejemplo2m at 19</a>] 
+[Warning: Using a default value of 0.198 for maximum step size.  The simulation
+step size will be equal to or less than this value.  You can disable this
+diagnostic by setting 'Automatic solver parameter selection' diagnostic to 'none'
+in the Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Users\user\Documents\MATLAB\ejemplo2m.m',19,1)">ejemplo2m at 19</a>] 
+[Warning: Using a default value of 0.198 for maximum step size.  The simulation
+step size will be equal to or less than this value.  You can disable this
+diagnostic by setting 'Automatic solver parameter selection' diagnostic to 'none'
+in the Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Users\user\Documents\MATLAB\ejemplo2m.m',19,1)">ejemplo2m at 19</a>] 
+sys=linmod('ejemplo2')
+[Warning: Using a default value of 0.2 for maximum step size.  The simulation step
+size will be equal to or less than this value.  You can disable this diagnostic by
+setting 'Automatic solver parameter selection' diagnostic to 'none' in the
+Diagnostics page of the configuration parameters dialog] 
+[> In <a href="matlab: opentoline('C:\Program Files\MATLAB\R2013b\toolbox\simulink\simulink\dlinmod.m',195,1)">dlinmod at 195</a>
+  In <a href="matlab: opentoline('C:\Program Files\MATLAB\R2013b\toolbox\simulink\simulink\linmod.m',60,1)">linmod at 60</a>] 
+
+sys = 
+
+             a: [3x3 double]
+             b: [3x1 double]
+             c: [0 1 0]
+             d: 0
+     StateName: {3x1 cell}
+    OutputName: {'ejemplo2/Out1'}
+     InputName: {'ejemplo2/In1'}
+     OperPoint: [1x1 struct]
+            Ts: 0
+
+simulink
+clock
+
+ans =
+
+   1.0e+03 *
+
+    2.0200    0.0060    0.0110    0.0090    0.0100    0.0436
+
+toc
+Elapsed time is 10335.551071 seconds.
+diary off

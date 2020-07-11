@@ -1,0 +1,640 @@
+
+tic
+clock
+
+ans =
+
+   1.0e+03 *
+
+    2.0200    0.0020    0.0110    0.0120    0.0370    0.0454
+
+s = tf('s');
+
+wn =1;
+help rlocus
+ <strong>rlocus</strong>  Evans root locus.
+ 
+    <strong>rlocus</strong>(SYS) computes and plots the root locus of the single-input,
+    single-output LTI model SYS. The root locus plot is used to analyze 
+    the negative feedback loop
+ 
+                      +-----+
+          ---->O----->| SYS |----+---->
+              -|      +-----+    |
+               |                 |
+               |       +---+     |
+               +-------| K |<----+
+                       +---+
+ 
+    and shows the trajectories of the closed-loop poles when the feedback 
+    gain K varies from 0 to Inf.  <strong>rlocus</strong> automatically generates a set of 
+    positive gain values that produce a smooth plot.  
+ 
+    <strong>rlocus</strong>(SYS,K) uses a user-specified vector K of gain values.
+ 
+    <strong>rlocus</strong>(SYS1,SYS2,...) draws the root loci of several models SYS1,SYS2,... 
+    on a single plot. You can specify a color, line style, and marker for 
+    each model, for example:
+       rlocus(sys1,'r',sys2,'y:',sys3,'gx').
+ 
+    [R,K] = <strong>rlocus</strong>(SYS) or R = <strong>rlocus</strong>(SYS,K) returns the matrix R of
+    complex root locations for the gains K.  R has LENGTH(K) columns
+    and its j-th column lists the closed-loop roots for the gain K(j).  
+  
+    See RLOCUSPLOT for additional graphical options for root locus plots.
+ 
+    See also <a href="matlab:help rlocusplot">rlocusplot</a>, <a href="matlab:help sisotool">sisotool</a>, <a href="matlab:help pole">pole</a>, ISSISO, <a href="matlab:help lti">lti</a>.
+
+    Overloaded methods:
+       <a href="matlab:help DynamicSystem/rlocus">DynamicSystem/rlocus</a>
+
+    Reference page in Help browser
+       <a href="matlab:doc rlocus">doc rlocus</a>
+
+p5
+{Error using <a href="matlab:helpUtils.errorDocCallback('figure')" style="font-weight:bold">figure</a>
+Requested figure handle in use by another object
+
+Error in <a href="matlab:helpUtils.errorDocCallback('p5', 'C:\Users\Estudiantes\Documents\MATLAB\p5.m', 5)" style="font-weight:bold">p5</a> (<a href="matlab: opentoline('C:\Users\Estudiantes\Documents\MATLAB\p5.m',5,0)">line 5</a>)
+    figure(0)
+} 
+p5
+s = tf('s');
+for wn = 0.35:0.2:1.15
+    damp = 0.75/wn;
+    sys = wn^2 /(s*(s+2*damp*wn));
+    hold on
+    rlocus(sys);
+    hold off
+end
+
+{Error using <a href="matlab:helpUtils.errorDocCallback('DynamicSystem/step', 'C:\Program Files\MATLAB\R2013b\toolbox\shared\controllib\engine\@DynamicSystem\step.m', 96)" style="font-weight:bold">DynamicSystem/step</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2013b\toolbox\shared\controllib\engine\@DynamicSystem\step.m',96,0)">line 96</a>)
+Plots must be of the same type and size to be superimposed.
+} 
+for wn = 0.35:0.2:1.15
+    damp = 0.75/wn;
+    sys = wn^2 /(s*(s+2*damp*wn));
+    hold on
+    step(sys);
+    hold off
+end
+{Error using <a href="matlab:helpUtils.errorDocCallback('DynamicSystem/step', 'C:\Program Files\MATLAB\R2013b\toolbox\shared\controllib\engine\@DynamicSystem\step.m', 96)" style="font-weight:bold">DynamicSystem/step</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2013b\toolbox\shared\controllib\engine\@DynamicSystem\step.m',96,0)">line 96</a>)
+Plots must be of the same type and size to be superimposed.
+} 
+figure(2)
+for wn = 0.35:0.2:1.15
+    damp = 0.75/wn;
+    sys = wn^2 /(s*(s+2*damp*wn));
+    hold on
+    step(sys);
+    hold off
+end
+for wn = 0.35:0.2:1.15
+    damp = 0.75/wn;
+    sys = wn^2 /(s*(s+2*damp*wn));
+    hold on
+    step(sys);
+    hold off
+    print(damp)
+end
+{Error using checkArgsForHandleToPrint>LocalCheckHandles (line 82)
+Handle input argument contains non-handle value(s).
+
+Error in checkArgsForHandleToPrint (line 30)
+
+
+Error in <a href="matlab:helpUtils.errorDocCallback('print>LocalCreatePrintJob', 'C:\Program Files\MATLAB\R2013b\toolbox\matlab\graphics\print.m', 344)" style="font-weight:bold">print>LocalCreatePrintJob</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2013b\toolbox\matlab\graphics\print.m',344,0)">line 344</a>)
+    handles = checkArgsForHandleToPrint(0, varargin{:});
+
+Error in <a href="matlab:helpUtils.errorDocCallback('print', 'C:\Program Files\MATLAB\R2013b\toolbox\matlab\graphics\print.m', 163)" style="font-weight:bold">print</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2013b\toolbox\matlab\graphics\print.m',163,0)">line 163</a>)
+    [pj, inputargs] = LocalCreatePrintJob(varargin{:});
+} 
+figure(2)
+for wn = 0.35:0.2:1.15
+    damp = 0.75/wn;
+    sys = wn^2 /(s*(s+2*damp*wn));
+    hold on
+    step(sys);
+    hold off
+    print(damp)
+end
+{Error using checkArgsForHandleToPrint>LocalCheckHandles (line 82)
+Handle input argument contains non-handle value(s).
+
+Error in checkArgsForHandleToPrint (line 30)
+
+
+Error in <a href="matlab:helpUtils.errorDocCallback('print>LocalCreatePrintJob', 'C:\Program Files\MATLAB\R2013b\toolbox\matlab\graphics\print.m', 344)" style="font-weight:bold">print>LocalCreatePrintJob</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2013b\toolbox\matlab\graphics\print.m',344,0)">line 344</a>)
+    handles = checkArgsForHandleToPrint(0, varargin{:});
+
+Error in <a href="matlab:helpUtils.errorDocCallback('print', 'C:\Program Files\MATLAB\R2013b\toolbox\matlab\graphics\print.m', 163)" style="font-weight:bold">print</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2013b\toolbox\matlab\graphics\print.m',163,0)">line 163</a>)
+    [pj, inputargs] = LocalCreatePrintJob(varargin{:});
+} 
+close all
+figure(3)
+for wn = 0.35:0.2:1.15
+    damp = 0.75/wn;
+    sys = wn^2 /(s*(s+2*damp*wn));
+    hold on
+    step(sys);
+    hold off
+    print(damp)
+end
+{Error using checkArgsForHandleToPrint>LocalCheckHandles (line 82)
+Handle input argument contains non-handle value(s).
+
+Error in checkArgsForHandleToPrint (line 30)
+
+
+Error in <a href="matlab:helpUtils.errorDocCallback('print>LocalCreatePrintJob', 'C:\Program Files\MATLAB\R2013b\toolbox\matlab\graphics\print.m', 344)" style="font-weight:bold">print>LocalCreatePrintJob</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2013b\toolbox\matlab\graphics\print.m',344,0)">line 344</a>)
+    handles = checkArgsForHandleToPrint(0, varargin{:});
+
+Error in <a href="matlab:helpUtils.errorDocCallback('print', 'C:\Program Files\MATLAB\R2013b\toolbox\matlab\graphics\print.m', 163)" style="font-weight:bold">print</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2013b\toolbox\matlab\graphics\print.m',163,0)">line 163</a>)
+    [pj, inputargs] = LocalCreatePrintJob(varargin{:});
+} 
+figure(4)
+for wn = 0.35:0.2:1.15
+    damp = 0.75/wn;
+    sys = wn^2 /(s*(s+2*damp*wn));
+    hold on
+    step(sys);
+    print(damp)
+end
+{Error using checkArgsForHandleToPrint>LocalCheckHandles (line 82)
+Handle input argument contains non-handle value(s).
+
+Error in checkArgsForHandleToPrint (line 30)
+
+
+Error in <a href="matlab:helpUtils.errorDocCallback('print>LocalCreatePrintJob', 'C:\Program Files\MATLAB\R2013b\toolbox\matlab\graphics\print.m', 344)" style="font-weight:bold">print>LocalCreatePrintJob</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2013b\toolbox\matlab\graphics\print.m',344,0)">line 344</a>)
+    handles = checkArgsForHandleToPrint(0, varargin{:});
+
+Error in <a href="matlab:helpUtils.errorDocCallback('print', 'C:\Program Files\MATLAB\R2013b\toolbox\matlab\graphics\print.m', 163)" style="font-weight:bold">print</a> (<a href="matlab: opentoline('C:\Program Files\MATLAB\R2013b\toolbox\matlab\graphics\print.m',163,0)">line 163</a>)
+    [pj, inputargs] = LocalCreatePrintJob(varargin{:});
+} 
+figure(4)
+for wn = 0.35:0.2:1.15
+    damp = 0.75/wn
+    sys = wn^2 /(s*(s+2*damp*wn));
+    hold on
+    step(sys);
+end
+
+damp =
+
+    2.1429
+
+
+damp =
+
+    1.3636
+
+
+damp =
+
+     1
+
+
+damp =
+
+    0.7895
+
+
+damp =
+
+    0.6522
+
+0.75/1.15
+
+ans =
+
+    0.6522
+
+help rlocus
+ <strong>rlocus</strong>  Evans root locus.
+ 
+    <strong>rlocus</strong>(SYS) computes and plots the root locus of the single-input,
+    single-output LTI model SYS. The root locus plot is used to analyze 
+    the negative feedback loop
+ 
+                      +-----+
+          ---->O----->| SYS |----+---->
+              -|      +-----+    |
+               |                 |
+               |       +---+     |
+               +-------| K |<----+
+                       +---+
+ 
+    and shows the trajectories of the closed-loop poles when the feedback 
+    gain K varies from 0 to Inf.  <strong>rlocus</strong> automatically generates a set of 
+    positive gain values that produce a smooth plot.  
+ 
+    <strong>rlocus</strong>(SYS,K) uses a user-specified vector K of gain values.
+ 
+    <strong>rlocus</strong>(SYS1,SYS2,...) draws the root loci of several models SYS1,SYS2,... 
+    on a single plot. You can specify a color, line style, and marker for 
+    each model, for example:
+       rlocus(sys1,'r',sys2,'y:',sys3,'gx').
+ 
+    [R,K] = <strong>rlocus</strong>(SYS) or R = <strong>rlocus</strong>(SYS,K) returns the matrix R of
+    complex root locations for the gains K.  R has LENGTH(K) columns
+    and its j-th column lists the closed-loop roots for the gain K(j).  
+  
+    See RLOCUSPLOT for additional graphical options for root locus plots.
+ 
+    See also <a href="matlab:help rlocusplot">rlocusplot</a>, <a href="matlab:help sisotool">sisotool</a>, <a href="matlab:help pole">pole</a>, ISSISO, <a href="matlab:help lti">lti</a>.
+
+    Overloaded methods:
+       <a href="matlab:help DynamicSystem/rlocus">DynamicSystem/rlocus</a>
+       <a href="matlab:help resppack.ltisource/rlocus">resppack.ltisource/rlocus</a>
+
+    Reference page in Help browser
+       <a href="matlab:doc rlocus">doc rlocus</a>
+
+figure()
+for wn = 0.35:0.2:1.15
+    damp = 0.75/wn
+    sys = wn^2 /(s*(s+2*damp*wn));
+    sysFB = sys//(1+sys);
+     sysFB = sys//(1+sys);
+                 |
+{Error: Unexpected MATLAB operator.
+} 
+close all
+figure()
+for wn = 0.35:0.2:1.15
+    damp = 0.75/wn;
+    sys = wn^2 /(s*(s+2*damp*wn));
+    sysFB = sys/(1+sys);
+    hold on
+    step(sysFB);
+end
+figure()
+for wn = 0.35:0.2:1.15
+    damp = 0.75/wn;
+    sys = wn^2 /(s*(s+2*damp*wn));
+    sysFB = sys/(1+sys);
+    hold on
+    step(sysFB);
+end
+figure()
+    wn=0.35;
+    damp = 0.75/wn;
+    sys = wn^2 /(s*(s+2*damp*wn));
+    sysFB = sys/(1+sys);
+    hold on
+    step(sysFB);
+figure()
+    wn=-0.35;
+    damp = 0.75/wn;
+    sys = wn^2 /(s*(s+2*damp*wn));
+    sysFB = sys/(1+sys);
+    hold on
+    step(sysFB);
+rltool
+rltool(sys)
+help pause
+ <strong>pause</strong> Wait for user response.
+    <strong>pause</strong>(n) pauses for n seconds before continuing, where n can also be a
+    fraction. The resolution of the clock is platform specific. Fractional
+    pauses of 0.01 seconds should be supported on most platforms.
+ 
+    <strong>pause</strong> causes a procedure to stop and wait for the user to strike any
+    key before continuing.
+ 
+    <strong>pause</strong> OFF indicates that any subsequent <strong>pause</strong> or <strong>pause</strong>(n) commands
+    should not actually pause. This allows normally interactive scripts to
+    run unattended.
+ 
+    <strong>pause</strong> ON indicates that subsequent <strong>pause</strong> commands should pause.
+ 
+    <strong>pause</strong> QUERY returns the current state of pause, either 'on' or 'off'.
+ 
+    STATE = <strong>pause</strong>(...) returns the state of pause previous to processing
+    the input arguments.
+ 
+    The accuracy of <strong>pause</strong> is subject to the scheduling resolution of the
+    operating system you are using and also to other system activity. It
+    cannot be guaranteed with 100% confidence, but only with some expected
+    error. For example, experiments have shown that choosing N with a
+    resolution of .1 (such as N = 1.7) leads to actual pause values that
+    are correct to roughly 10% in the relative error of the fractional
+    part. Asking for finer resolutions (such as .01) shows higher relative
+    error.
+ 
+    Examples:
+        % Pause for 5 seconds
+        pause(5)
+ 
+        % Temporarily disable pause
+        pause off
+        pause(5) % Note that this does not pause
+        pause on
+ 
+        % Aternatively, disable/restore the state
+        pstate = pause('off')
+        pause(5) % Note that this does not pause
+        pause(pstate);
+ 
+    See also <a href="matlab:help keyboard">keyboard</a>, <a href="matlab:help input">input</a>.
+
+    Reference page in Help browser
+       <a href="matlab:doc pause">doc pause</a>
+
+for pole = -5:1:5
+    %damp = 0.75/wn;
+    sys = ((wn^2)*(s-p) )/(s*(s+2*0.75));
+    rlocus(sys);
+    pause
+end
+{Undefined function or variable 'p'.
+} 
+for pole = -5:1:5
+    %damp = 0.75/wn;
+    sys = ((wn^2)*(s-pole) )/(s*(s+2*0.75));
+    rlocus(sys);
+    pause
+end
+pause off
+help wait
+ --- help for timer/wait ---
+
+ <strong>wait</strong> Wait until the timer stops running.
+ 
+     <strong>wait</strong>(OBJ) blocks the MATLAB command line and waits until the
+     timer, represented by the timer object OBJ, stops running. 
+     When a timer stops running, the value of the timer object's
+     Running property changes from 'On' to 'Off'.
+ 
+     If OBJ is an array of timer objects, <strong>wait</strong> blocks the MATLAB
+     command line until all the timers have stopped running.
+ 
+     If the timer is not running, <strong>wait</strong> returns immediately.
+ 
+     See also <a href="matlab:help timer/start">timer/start</a>, <a href="matlab:help timer/stop">timer/stop</a>.
+ 
+
+    Overloaded methods:
+       <a href="matlab:help daqdevice/wait">daqdevice/wait</a>
+       <a href="matlab:help imaqdevice/wait">imaqdevice/wait</a>
+       <a href="matlab:help dagroup/wait">dagroup/wait</a>
+
+    Reference page in Help browser
+       <a href="matlab:doc timer/wait">doc timer/wait</a>
+
+for pole = -5:1:5
+    %damp = 0.75/wn;
+    sys = ((wn^2)*(s-pole) )/(s*(s+2*0.75));
+    rlocus(sys);
+    pause
+end
+for pole = -5:1:5
+    %damp = 0.75/wn;
+    sys = ((wn^2)*(s-pole) )/(s*(s+2*0.75));
+    rlocus(sys);
+    pause
+end
+for pole = -5:1:5
+    %damp = 0.75/wn;
+    figure()
+    sys = ((wn^2)*(s-pole) )/(s*(s+2*0.75));
+    rlocus(sys);
+end
+close all
+for pole = -5:1:5
+    %damp = 0.75/wn;
+    figure()
+    sys = ((wn^2)*(s-pole) )/(s*(s+2*0.75));
+    rlocus(sys);
+end
+sys = wn^2 /(s*(s+2*damp*wn));
+rltool(sys)
+rltool(sys)
+sys = wn^2 /(s*(s+2*damp*wn));
+rltool(sys)
+rltool(sys)
+sys = wn^2 /(s*(s+2*damp*wn));
+rltool(sys)
+rltool(sys)++
+ rltool(sys)++
+              |
+{Error: Expression or statement is incomplete or incorrect.
+} 
+rltool(sys)++
+ rltool(sys)++
+              |
+{Error: Expression or statement is incomplete or incorrect.
+} 
+rltool(sys)
+rltool(sys)
+help pzmap
+ <strong>pzmap</strong>  Pole-zero map of dynamic systems.
+ 
+    <strong>pzmap</strong>(SYS) computes the poles and (transmission) zeros of the
+    dynamic system SYS and plots them in the complex plane. The poles 
+    are plotted as x's and the zeros are plotted as o's.  
+ 
+    <strong>pzmap</strong>(SYS1,SYS2,...) shows the poles and zeros of several systems
+    SYS1,SYS2,... on a single plot. You can specify distinctive colors 
+    for each model, for example:
+       pzmap(sys1,'r',sys2,'y',sys3,'g')
+ 
+    [P,Z] = <strong>pzmap</strong>(SYS) returns the poles and zeros of the system in two 
+    column vectors P and Z. No plot is drawn on the screen.  
+ 
+    The functions SGRID or ZGRID can be used to plot lines of constant
+    damping ratio and natural frequency in the s or z plane.
+ 
+    For arrays SYS of dynamic systems, <strong>pzmap</strong> plots the poles and zeros of
+    each model in the array on the same diagram.
+ 
+    See PZPLOT for additional graphical options for pole/zero plots.
+ 
+    See also <a href="matlab:help pzplot">pzplot</a>, <a href="matlab:help pole">pole</a>, <a href="matlab:help zero">zero</a>, <a href="matlab:help sgrid">sgrid</a>, <a href="matlab:help zgrid">zgrid</a>, <a href="matlab:help rlocus">rlocus</a>, <a href="matlab:help DynamicSystem">DynamicSystem</a>.
+
+    Overloaded methods:
+       <a href="matlab:help DynamicSystem/pzmap">DynamicSystem/pzmap</a>
+       <a href="matlab:help resppack.ltisource/pzmap">resppack.ltisource/pzmap</a>
+
+    Reference page in Help browser
+       <a href="matlab:doc pzmap">doc pzmap</a>
+
+figure()
+wn =1;
+sys = wn^2 /(s*(s+2*damp*wn));
+for damp = 0:0.1:1.2
+   sys = wn^2 /(s*(s+2*damp*wn));
+   sys = sys/(1+sys);
+   hold on
+   pzmap(sys)
+end
+figure()
+wn =1;
+sys = wn^2 /(s*(s+2*damp*wn));
+for damp = 0:0.1:1.2
+   sys = wn^2 /(s*(s+2*damp*wn));
+   rlocus(sys)
+end
+figure()
+wn =1;
+sys = wn^2 /(s*(s+2*damp*wn));
+for damp = 0:0.1:1.2
+   sys = wn^2 /(s*(s+2*damp*wn));
+   hold on
+   rlocus(sys)
+end
+figure()
+wn =1;
+sys = wn^2 /(s*(s+2*damp*wn));
+for damp = 0:0.1:1.2
+   sys = wn^2 /(s*(s+2*damp*wn));
+   hold on
+   rlocus(sys)
+end
+figure()
+wn =1;
+sys = wn^2 /(s*(s+2*damp*wn));
+for damp = 0:0.1:1.2
+   sys = wn^2 /(s*(s+2*damp*wn));
+   sysFB = sys/(1+sys);
+   rlocus(sysFB)
+end
+figure()
+wn =1;
+for damp = 0:0.1:1.2
+   sys = wn^2 /(s*(s+2*damp*wn));
+   sysFB = sys/(1+sys);
+   rlocus(sysFB)
+end
+figure()
+wn =1;
+for damp = 0:0.1:1.2
+   sys = wn^2 /(s*(s+2*damp*wn));
+   sysFB = sys/(1+sys);
+   hold on
+   pzmap(sysFB)
+end
+figure()
+wn =1;
+for damp = 0:0.1:2
+   sys = wn^2 /(s*(s+2*damp*wn));
+   sysFB = sys/(1+sys);
+   hold on
+   pzmap(sysFB)
+end
+figure()
+wn =1;
+for damp = 0:0.1:10
+   sys = wn^2 /(s*(s+2*damp*wn));
+   sysFB = sys/(1+sys);
+   hold on
+   pzmap(sysFB)
+end
+figure()
+wn =1;
+for damp = 0:0.1:1.2
+   sys = wn^2 /(s*(s+2*damp*wn));
+   sysFB = sys/(1+sys);
+   step(sysFB);
+end
+figure()
+wn =1;
+for damp = 0:0.1:1.2
+   sys = wn^2 /(s*(s+2*damp*wn));
+   sysFB = sys/(1+sys);
+   hold on
+   step(sysFB);
+end
+figure()
+wn =1;
+for damp = 0:0.4:1.2
+   sys = wn^2 /(s*(s+2*damp*wn));
+   sysFB = sys/(1+sys);
+   hold on
+   step(sysFB);
+end
+figure()
+wn =1;
+for damp = 0:1.2:1.2
+   sys = wn^2 /(s*(s+2*damp*wn));
+   sysFB = sys/(1+sys);
+   hold on
+   step(sysFB);
+end
+damp = 0;
+   sys = wn^2 /(s*(s+2*damp*wn));
+   sysFB = sys/(1+sys);
+   hold on
+   step(sysFB);
+damp = 1.2;
+   sys = wn^2 /(s*(s+2*damp*wn));
+   sysFB = sys/(1+sys);
+   hold on
+   step(sysFB);
+figure()
+wn =1;
+for damp = 0.1:0.1:1.2
+   sys = wn^2 /(s*(s+2*damp*wn));
+   sysFB = sys/(1+sys);
+   hold on
+   step(sysFB);
+end
+figure()
+wn =1;
+for damp = 0.1:0.1:0.1
+   sys = wn^2 /(s*(s+2*damp*wn));
+   sysFB = sys/(1+sys);
+   hold on
+   step(sysFB);
+end
+figure()
+wn =1;
+for damp = 0:0.1:0.1
+   sys = wn^2 /(s*(s+2*damp*wn));
+   sysFB = sys/(1+sys);
+   hold on
+   step(sysFB);
+end
+figure()
+wn =1;
+for damp = 0:0.1:0.1
+   sys = wn^2 /(s*(s+2*damp*wn));
+   sysFB = sys/(1+sys);
+   hold on
+   step(sysFB);
+end
+figure()
+wn =1;
+for damp = 0:0.1:1.2
+   sys = wn^2 /(s*(s+2*damp*wn));
+   sysFB = sys/(1+sys);
+   hold on
+   step(sysFB);
+end
+figure()
+wn =1;
+for damp = -1.2:0.1:0
+   sys = wn^2 /(s*(s+2*damp*wn));
+   sysFB = sys/(1+sys);
+   hold on
+   step(sysFB);
+end
+figure()
+wn =1;
+for damp = -0.1:0.1:0
+   sys = wn^2 /(s*(s+2*damp*wn));
+   sysFB = sys/(1+sys);
+   hold on
+   step(sysFB);
+end
+clock
+
+ans =
+
+   1.0e+03 *
+
+    2.0200    0.0020    0.0110    0.0150    0.0060    0.0011
+
+toc
+Elapsed time is 8900.346004 seconds.
+diary

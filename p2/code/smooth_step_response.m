@@ -4,9 +4,9 @@
 % Basically each second has its own sampling frequency
 close all
 clear all
-addpath('C:\Users\user\Desktop\code\control_lab\')
+addpath('y:\code\control_lab\')
 % Loading of the data
-path = 'C:\Users\user\Desktop\code\control_lab\p2\';
+path = 'Y:\code\control_lab\p2\data\';
 cd(path)
 filename = 'to_matlab.csv';
 data = csvread(filename);
@@ -24,12 +24,19 @@ a = 4; b = 19.2;
 
 vop_all = mapScale(vop_all,0,100,a,b);
 
+[stableTime,stableVal,stableIndex] = findStablePoint(time_all,pv_all,40,0.005);
+tm = time_all(find(pv_all>pv_all(stableIndex), 1, 'first')); 
+
+
 % find when the step stimuli starts
 start = find(vop_all>=max(vop_all), 1, 'first'); 
+tm = tm - time_all(start);
 time = time_all(start:end);
 time = time - time_all(start); % remove offset to start from zero
 pv = pv_all(start:end);
 vop = vop_all(start:end);
+
+
 
 % Smoothing
 span = 0.1 * length(time); % span of 10% of the total number of data points

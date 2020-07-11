@@ -1,8 +1,8 @@
 close all
 clear all
-addpath('C:\Users\user\Desktop\code\control_lab\')
-load('C:\Users\user\Desktop\code\control_lab\p2\M12_Grupo3_Presion_datos_depurados.mat')
-path = 'C:\Users\user\Desktop\code\control_lab\p2\';
+addpath('Y:\code\control_lab\')
+load('Y:\code\control_lab\p2\data\M12_Grupo3_Presion_datos_depurados.mat')
+path = 'Y:\code\control_lab\p2\';
 cd(path)
 
 plant.in = vop;
@@ -27,7 +27,7 @@ plant.out_all = plant.out_all - offset.output;
 % mean sampling frequency was 2.2 samples per sec
 time.fs = 2.2;
 time.Ts = 1/time.fs;
-time.ending = 600;
+time.ending = 400;
 interpolated.time = min(time.t):time.Ts:max(time.t);
 interpolated.out = interp1(time.t,plant.out,interpolated.time);
 interpolated.in = interp1(time.t,plant.in,interpolated.time);
@@ -108,11 +108,12 @@ plant.kp = plant.out(plant.stableIndex)/plant.in(plant.stableIndex);
 % since time is not equispaced, better to use diff
 zn.name = 'Ziegler - Nichols';
 zn.slope = diff(plant.out)./diff(time.t);
+zn.slope = gradient(plant.out,time.Ts);
 [zn.maxSlope,zn.maxSlope_index] = max(zn.slope);
 
 aux_fig = aux_fig + 1;
 figure(aux_fig)
-plot(time.t(1:end-1),zn.slope)
+plot(time.t(1:length(zn.slope)),zn.slope)
 grid on
 title('Derivada numerica (diff(y)./diff(t)) de la respuesta respecto al tiempo (no uniforme)')
 
@@ -153,7 +154,9 @@ zn.out = step(zn.sys,time.ext)';
 miller.name = 'Miller';
 miller.tm = zn.tm;
 miller.y = plant.out(plant.stableIndex)*(1-exp(-1));
-miller.tau = (miller.y - zn.b)/zn.m - miller.tm;
+%miller.tau = (miller.y - zn.b)/zn.m - miller.tm;
+[~,miller.tau] = findClosest(plant.out,miller.y);
+miller.tau = time.t(miller.tau)-miller.tm;
 miller.sys = (plant.kp/(miller.tau*s + 1))*exp(-miller.tm*s);
 miller.out = step(miller.sys,time.ext)';
 
@@ -234,14 +237,22 @@ id1.name = 'Matlab 1er Orden';
 id1.data = iddata(plant.out_all',plant.in_all',time.Ts);
 %id1.data = iddata(plant.out',plant.in',time.Ts);
 % sys = tfest(data,np,nz,iodelay); if NaN estimate
-id1.sys = tfest(id1.data,1,0,NaN);
+opt = procestOptions('InitialCondition','zero');
+id1.sys = procest(id1.data,'P1D',opt);
+id1.sys.Kp = plant.kp;
+%id2.sys.num = plant.kp;
+%id1.tau = get_taus(id1.sys.den);
+%for aux_i = 1:length(id1.tau)
+%id1.sys.num = id1.sys.num / id1.tau(aux_i);
+%end
+
 id1.out = step(id1.sys,time.ext)';
-id1.tau = get_taus(id1.sys.den);
-id1.kp = id1.sys.num;
-for aux_i = 1:length(id1.tau)
-id1.kp = id1.kp * id1.tau(aux_i);
-end
-id1.tm = id1.sys.ioDelay;
+
+%id1.kp = id1.sys.num;
+%for aux_i = 1:length(id1.tau)
+%id1.kp = id1.kp * id1.tau(aux_i);
+%end
+%id1.tm = id1.sys.ioDelay;
 
 
 % plot responses
@@ -303,11 +314,24 @@ time.t75 = time.t(time.t75);
 g123c.a = (-0.6240*time.t25 + 0.9866*time.t50 - 0.3626*time.t75)/(0.3533*time.t25 - 0.7036*time.t50 + 0.3503*time.t75);
 g123c.a = abs(g123c.a);
 g123c.tauPP = (time.t75-time.t25)/(0.9866+0.7036*g123c.a);
-g123c.tauPP = abs(g123c.tauPP);
+%g123c.tauPP = abs(g123c.tauPP);
+if g123c.tauPP < 0
+    g123c.tauPP = 0;
+end
 g123c.tau1 = g123c.tauPP;
 g123c.tau2 = g123c.a*g123c.tauPP;
+if g123c.tau1 < 0
+    g123c.tau1 = 0;
+end
+
+if g123c.tau2 < 0
+    g123c.tau2 = 0;
+end
 g123c.tm = time.t75 - (1.3421+1.3455*g123c.a)*g123c.tauPP;
-g123c.tm = abs(g123c.tm);
+%g123c.tm = abs(g123c.tm);
+if g123c.tm < 0
+    g123c.tm = 0;
+end
 g123c.sys = (plant.kp * exp(-g123c.tm*s))/((g123c.tau1*s+1)*(g123c.tau2*s+1));
 g123c.out = step(g123c.sys,time.ext)';
 
@@ -348,7 +372,10 @@ end
 stark.wn = stark.f2/(time.t75-time.t15);
 stark.f3 = 0.922 * 1.66^(stark.damp);
 stark.tm = time.t45 - stark.f3/stark.wn;
-stark.tm = abs(stark.tm);
+%stark.tm = abs(stark.tm);
+if stark.tm < 0
+    stark.tm = 0;
+end
 stark.tau1 = (stark.damp + sqrt(stark.damp^2 - 1))/(stark.wn);
 stark.tau2 = (stark.damp - sqrt(stark.damp^2 - 1))/(stark.wn);
 
@@ -365,7 +392,7 @@ time.t5 = time.t(time.t5);
 time.t90 = time.t(time.t90);
 [~,time.t70] = findClosest(plant.out,plant.out(plant.stableIndex)*0.7); 
 time.t70 = time.t(time.t70);
-jf.tms = [time.t2;time.t5];
+jf.tms = [time.t2,time.t5];
 jf.errors = zeros(length(jf.tms),1);
 
 for aux_i = 1:length(jf.tms)
@@ -404,18 +431,25 @@ viteckova2.out = step(viteckova2.sys,time.ext)';
 
 % Matlab Identification 2nd Order
 id2.name = 'Matlab 2do Orden';
+opt = procestOptions('InitialCondition','zero');
 id2.data = iddata(plant.out_all',plant.in_all',time.Ts);
 %id2.data = iddata(plant.out',plant.in',time.Ts);
 %sys = tfest(data,np,nz,iodelay); if NaN estimate
-id2.sys = tfest(id2.data,2,0,NaN);
-id2.out = step(id2.sys,time.ext)';
-id2.taus = get_taus(id2.sys.den);
-id2.kp = id2.sys.num;
-for aux_i = 1:length(id2.taus)
-id2.kp = id2.kp * id2.taus(aux_i);
-end
-id2.tm = id2.sys.ioDelay;
+id2.sys = procest(id2.data,'P2D',opt);
+id2.sys.Kp = plant.kp;
+%id2.sys.num = plant.kp;
+%id2.taus = get_taus(id2.sys.den);
+%for aux_i = 1:length(id2.taus)
+%id2.sys.num = id2.sys.num / id2.taus(aux_i);
+%end
 
+%id2.kp = id2.sys.num;
+%for aux_i = 1:length(id2.taus)
+%id2.kp = id2.kp * id2.taus(aux_i);
+%end
+%id2.tm = id2.sys.ioDelay;
+
+id2.out = step(id2.sys,time.ext)';
 % plot responses
 aux_fig = aux_fig + 1;
 figure(aux_fig)

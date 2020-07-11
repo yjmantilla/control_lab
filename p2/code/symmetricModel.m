@@ -21,7 +21,9 @@ tauPP = abs(tauPP);
 tau1 = tauPP;
 tau2 = a*tauPP;
 tm = t1mx - (1.3421+1.3455*a)*tauPP;
-tm = abs(tm);
+if tm < 0
+    tm = 0;
+end
 sys = (plant_kp * exp(-tm*s))/((tau1*s+1)*(tau2*s+1));
 sys_out = step(sys,time)';
 errors(i) = immse(sys_out,plant_out/max(plant_in));
