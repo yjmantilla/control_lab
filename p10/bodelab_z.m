@@ -30,41 +30,35 @@ Ns = [];
 j=1;
 factors=[];
 sol_bool = 0;
-lim_ti = 40;
-lim_bp = 25;
-lim_ts = 300;
-lim_ov = 20;
+lim = 60;
 mp =0;
 td=7;
 factor = 8;
 mp = 3.1;
-for mp=0.001:1:10%0.001:1:10 %3.1%:0.05:3.2%
-   for td=17.75:0.05:18.25%1:1:20%7%6.9:0.05:7.1%7%
-       for factor=6.5:0.05:7.25%lim_ti/td:0.5:30%8%7.9:0.1:8.1%
-        fprintf('\n%.3f %.2f %.2f ', mp,td,factor);
-        %Se realiza un controlador aproximado, para encntrar la fase maxima y la
-        %frecuencia a la que se da
+for z=0.6:0.05:1%0.001:1:10
+   for td=1:1:20%7%6.9:0.05:7.1%7%1:1:20
+       for factor=50%lim/td:0.5:30%8%7.9:0.1:8.1%lim/td:0.5:30
+        mp=0;
+        fprintf('\n%.3f %.2f %.2f ', z,td,factor);
+        %Controlador aproximado PID serie
         ti=factor*td;
-        %pid serie
         Gc_xti_divkc=(ti*s+1)*(td*s+1)/(s*(alpha*td*s+1));%ti dividiendo?
+        
+        % Max phase by this controller
         [mag,phase,w_line]= bode(Gc_xti_divkc);
-        [Qmax,index]= max(phase);
-        wmax=w_line(index);
-        %Qmax=50.7;
-        %wmax=3.58;
-        %0.005;
-        z=sqrt(((log(mp/100))^2)/((pi^2)+(log(mp/100))^2));
-        %z=0;
-        %Con el valor de chita se halla MF tan-1(2z/sqrt(sqrt(1+4*Z^4)-2*z^2)
-        %z=0.96;
-        %z=0;
+        [phase_max,index]= max(phase);
+        wmax = w_line(index);
+        
+        % Look the desired phase margin using z
         MF=atan2(2*z,(sqrt(sqrt(1+4*z^4)-2*z^2)))*180/pi;
         % Se halla la relacion de diseño con la frecuencia a la que se dio la
         % fase max
-        Rd=1/(alpha*td*wmax);
-        % se haya la fase actual;
-        
-        Fa=-180+ MF- Qmax;
+        % Design relation = alpha td pole/wmax
+        Rd=(1/(alpha*td))/wmax;
+        % se haya la fase actual, el controlador agrega a la fase actual
+        %ya que se multiplica por la planta
+        % Fa + phase_max + 180 = MF
+        Fa=-180+ MF- phase_max;
         % se realiza el bode a la planta y se mira la frecuencia actual a esa fase
         % actual
         [mag,phase,w_line]= bode(Gp_nok);
@@ -74,7 +68,7 @@ for mp=0.001:1:10%0.001:1:10 %3.1%:0.05:3.2%
         %se halla los td y ti respectivos del sistema 
         tdf=1/(Rd*wactual*alpha);
         tif=factor*tdf;%3?
-        cond3 = tif > lim_ti;
+        cond3 = tif > 60;
         if not(cond3)
             continue
         end
@@ -96,10 +90,10 @@ for mp=0.001:1:10%0.001:1:10 %3.1%:0.05:3.2%
         %kc=(tif)/(K*kp);
         kc=(K*tif)/(kp);
         bp= 100/kc;
-        cond2 = bp > lim_bp;
-        if not (cond2)
-            continue
-        end
+        cond2 = bp > 30;
+        %if not (cond2)
+            %continue
+        %end
         % se grafica bode con el fin de mirar que a la fase actual, ya esta en 0dB
         Gc_nok=(tif*s+1)*(tdf*s+1)/(tif*s*(alpha*tdf*s+1));
         G1=Gp_nok*Gc_nok*kc*kp;
@@ -112,26 +106,27 @@ for mp=0.001:1:10%0.001:1:10 %3.1%:0.05:3.2%
         bp_pal = 100/kc_pal;
         ti_pal = tif+tdf;
         td_pal = tif*tdf/(tif+tdf);
-        cond1 = info.SettlingTime < lim_ts;
-        cond5 = bp_pal > lim_bp;
-        cond6 = ti_pal > lim_ti;
+
+        cond1 = info.SettlingTime < 120;
+        cond5 = bp_pal > 30;
+        cond6 = ti_pal > 60;
         
-        cond4 = info.Overshoot < lim_ov;
+        cond4 = info.Overshoot < 10;
         %step(sys_r)
-            if (cond1 && cond2 && cond3 && cond4 && cond5 && cond6)
+        if (cond1 && cond2 && cond3 && cond4 && cond5 && cond6)
             if graph_iterations
                 hold on
                 step(sys_r);
             end
             fprintf('sol!!!!!!!!!!!!!')
             %rlocus(Gr)
-        %end
-            Gc_pal = kc_pal*(1+(1/(ti_pal*s))+((td_pal*s)/(alpha*td_pal*s+1)));
-            sys_rpal=feedback(Gp*Gc_pal,1);
+        end
+            %Gc_pal = kc_pal*(1+(1/(tis_pal*s))+((tds_pal*s)/(alpha*tds_pal*s+1)));
+            %sys_r=feedback(Gp*Gc_pal,1);
             %hold on
-            info_pal = stepinfo(sys_rpal);
-            %sp_pal = info_pal.Overshoot;
-            %sp_ts = info_pal.SettlingTime;
+            %info_pal = stepinfo(sys_r);
+            %info_pal.Overshoot;
+            %info_pal.SettlingTime;
             tis_init = [tis_init;ti];
             factors= [factors;factor];
             tds_init = [tds_init;td];
@@ -142,7 +137,9 @@ for mp=0.001:1:10%0.001:1:10 %3.1%:0.05:3.2%
             sps = [sps ; info.Overshoot];
             tss = [tss ; info.SettlingTime];
             kcs = [kcs ; kc];
-
+            kc_pal = kc*((tif+tdf)/tif);
+            ti_pal = tif+tdf;
+            td_pal = tif*tdf/(tif+tdf);
             kcs_pal = [kcs_pal;kc_pal];
             tis_pal = [tis_pal;ti_pal];
             tds_pal = [tds_pal;td_pal];
@@ -151,12 +148,12 @@ for mp=0.001:1:10%0.001:1:10 %3.1%:0.05:3.2%
             Is = [Is ; kc_pal/ti_pal];
             Ds = [Ds ; kc_pal*td_pal];
             Ns = [Ns ; 1/(alpha*td_pal)];
-            bps_pal = [bps_pal ; bp_pal];
-            sps_pal = [sps_pal ; info_pal.Overshoot];
-            tss_pal = [tss_pal ;info_pal.SettlingTime];
+            %bps_pal = [bps_pal ; bp_pal];
+            %sps_pal = [sps_pal ; info_pal.Overshoot];
+            %tss_pal = [tss_pal ;info_pal.SettlingTime];
             sol_bool = 0;
             %break
-            end
+            
         end
        %fprintf('%.3f %.2f %.2f kc %.2f ti %.2f td %.2f bp %.2f ts %.2f sp %.2f\n', mp,td,factor,kc,ti,td,bp,info.SettlingTime,info.Overshoot);
        if sol_bool
@@ -176,9 +173,9 @@ end
 [spmin,spind] = min(sps);
 [tsmin,tsind] = min(tss);
 [spmax,spind2] = max(sps);
-%bps_pal = 100./kcs_pal;
+bps_pal = 100./kcs_pal;
 %bps_pal = bps_pal';
-TPID = table(bps,sps,tss,kcs,tis,tds,Ps,Is,Ds,Ns,kcs_pal,tis_pal,tds_pal,bps_pal,sps_pal,tss_pal,mps_init,tds_init,factors,tis_init);
+TPID = table(bps,sps,tss,kcs,tis,tds,Ps,Is,Ds,Ns,kcs_pal,tis_pal,tds_pal,bps_pal,mps_init,tds_init,factors,tis_init);
 % 
 % for i=1:length(bps)
 %     %i=1;%select individual graph

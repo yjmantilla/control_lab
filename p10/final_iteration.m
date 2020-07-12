@@ -30,18 +30,18 @@ Ns = [];
 j=1;
 factors=[];
 sol_bool = 0;
-lim_ti = 40;
-lim_bp = 25;
-lim_ts = 300;
-lim_ov = 20;
+lim_ti = 60;
+lim_bp = 30;
+lim_ts = 123;
+lim_ov = 12;
 mp =0;
 td=7;
 factor = 8;
 mp = 3.1;
-for mp=0.001:1:10%0.001:1:10 %3.1%:0.05:3.2%
-   for td=17.75:0.05:18.25%1:1:20%7%6.9:0.05:7.1%7%
-       for factor=6.5:0.05:7.25%lim_ti/td:0.5:30%8%7.9:0.1:8.1%
-        fprintf('\n%.3f %.2f %.2f ', mp,td,factor);
+for mp=0.01:0.1:10%8:0.5:9.5%0.001:1:10 %3.1%:0.05:3.2%
+   for td=5%1:1:20%7%6.9:0.05:7.1%7%
+       for factor=lim_ti/td:0.01:20%8%7.9:0.1:8.1%
+        fprintf('\n%.3f %.2f %.7f ', mp,td,factor);
         %Se realiza un controlador aproximado, para encntrar la fase maxima y la
         %frecuencia a la que se da
         ti=factor*td;

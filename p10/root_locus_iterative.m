@@ -21,10 +21,10 @@ orig_sp = info.Overshoot;
 % respuesta caracteristica de segundo orden
 
 %Choose Ti near tau to cancel that pole
-
+%un poco a la izquierda(mayor valor absoluto) del polo del sistema
 tol = 0.05;%0.0005;
-ti = tau + tau*tol;%or -?
-comp_zero =  ti*s +1;
+ti = tau + tau*tol;%
+comp_zero =  ti*s +1; 
 comp_pole = ti*s;
 
 Gc_nok = comp_zero/comp_pole;
@@ -35,6 +35,7 @@ kcs = [];
 bps = [];
 sps = [];
 tss = [];
+
 tis = [];
 chis =[];
 wns =[];
@@ -48,8 +49,8 @@ for sp = 0.001:1:10%30 % subestimated too
         %fprintf('%.2f %.2f\n',sp,ts); 
         chi = sqrt(((log(sp/100))^2)/((pi^2)+(log(sp/100))^2));
         wn = 4/(chi*ts);
-        cond5 = 1;%wn > 0.0564;
-        cond6 = 1;%chi > 0.5912;
+        cond5 = wn > 0.0564;
+        cond6 = chi > 0.5912;
         if cond5 && cond6
             %fprintf('sol!');
 
