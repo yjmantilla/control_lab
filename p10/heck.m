@@ -112,6 +112,9 @@ for mp=8.5%:0.01:8.6%8:0.5:9.5%0.001:1:10 %3.1%:0.05:3.2%
         bp_pal = 100/kc_pal;
         ti_pal = tif+tdf;
         td_pal = tif*tdf/(tif+tdf);
+        Gc_pal = kc_pal*(1+(1/(ti_pal*s))+((td_pal*s)/(alpha*td_pal*s+1)));
+        sys_rpal=feedback(Gp*Gc_pal,1);
+
         cond1 = info.SettlingTime < lim_ts;
         cond5 = bp_pal > lim_bp;
         cond6 = ti_pal > lim_ti;
@@ -120,14 +123,16 @@ for mp=8.5%:0.01:8.6%8:0.5:9.5%0.001:1:10 %3.1%:0.05:3.2%
         %step(sys_r)
             if (cond1 && cond2 && cond3 && cond4 && cond5 && cond6)
             if graph_iterations
+                figure(1)
                 hold on
                 step(sys_r);
+                figure(2)
+                hold on
+                step(sys_rpal);
             end
             fprintf('sol!!!!!!!!!!!!!')
             %rlocus(Gr)
         %end
-            Gc_pal = kc_pal*(1+(1/(ti_pal*s))+((td_pal*s)/(alpha*td_pal*s+1)));
-            sys_rpal=feedback(Gp*Gc_pal,1);
             %hold on
             info_pal = stepinfo(sys_rpal);
             %sp_pal = info_pal.Overshoot;

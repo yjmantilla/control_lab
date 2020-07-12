@@ -6,7 +6,7 @@ s=tf('s');
 kp=1.34;
 tau = 78.2;
 Gp = kp/(tau*s + 1);
-graph_iterations = 0;
+graph_iterations = 1;
 
 %% System poles
 plant_poles = pole(Gp);
@@ -44,8 +44,12 @@ Is=[];
 vals = [];
 wanteds=[];
 reals=[{}];
-for sp = 0.001:1:10%30 % subestimated too
-   for ts = 1:1:120%200 %ts seems to subestimate
+sp = 0.001:1:10;
+ts = 1:1:120;
+sps_init = [];
+tss_init = [];
+for sp = 4%0.001:1:10%30 % subestimated too
+   for ts = 99%1:1:120%200 %ts seems to subestimate
         %fprintf('%.2f %.2f\n',sp,ts); 
         chi = sqrt(((log(sp/100))^2)/((pi^2)+(log(sp/100))^2));
         wn = 4/(chi*ts);
@@ -89,6 +93,8 @@ for sp = 0.001:1:10%30 % subestimated too
             vals = [vals;val];
             wanteds = [wanteds;wanted_root1];
             reals = [reals;{real_root}];
+            tss_init = [tss_init;ts];
+            sps_init = [sps_init;sp];
             end
             
             fprintf('sp %.3f ts %.2f kc %.2f ti %.2f bp %.2f ts %.2f sp %.2f %.3f\n', sp,ts,kc,ti,bp,info.SettlingTime,info.Overshoot,val);
@@ -108,7 +114,7 @@ end
 % el valor de la parte real deseada se acerca al valor de la parte real
 % obtenida
 % pero nunca tenemos parte imaginaria?
-TPI = table(bps,sps,tss,chis,wns,vals,kcs,tis,Ps,Is,vals,wanteds,reals);
+TPI = table(sps_init,tss_init,bps,sps,tss,chis,wns,vals,kcs,tis,Ps,Is,vals,wanteds,reals);
 
 % analisis conclusiones
 % en general ver la diferencia de lo diseñado con lo obtenido en las
@@ -127,3 +133,4 @@ TPI = table(bps,sps,tss,chis,wns,vals,kcs,tis,Ps,Is,vals,wanteds,reals);
 % end
 % k_line = 1:0.1:100/bp_limit;
 
+% se elige el 9 {30.5715359503927,0,76.0354860131750,0.715618575909178,0.0564603012892838,1,3.27101654827767,82.1100000000000,3.27101654827767,0.0398370058248407,1,-0.0404040404040404 + 0.0394370275338466i,[-0.0568257128042097;-0.0120126781765073]}
