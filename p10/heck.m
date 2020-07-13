@@ -50,8 +50,8 @@ for mp=8.5%:0.01:8.6%8:0.5:9.5%0.001:1:10 %3.1%:0.05:3.2%
         [mag,phase,w_line]= bode(Gc_xti_divkc);
         [Qmax,index]= max(phase);
         wmax=w_line(index);
-        %Qmax=50.7;
-        %wmax=3.58;
+        Qmax=52.98;
+        wmax=0.6776;
         %0.005;
         z=sqrt(((log(mp/100))^2)/((pi^2)+(log(mp/100))^2));
         %z=0;
@@ -70,10 +70,13 @@ for mp=8.5%:0.01:8.6%8:0.5:9.5%0.001:1:10 %3.1%:0.05:3.2%
         [mag,phase,w_line]= bode(Gp_nok);
         idx = findNearest(phase,Fa);
         wactual = w_line(idx);%0.37;%0.231
+        %wactual = 0.476;
         %wactual=0.134;
         %se halla los td y ti respectivos del sistema 
         tdf=1/(Rd*wactual*alpha);
         tif=factor*tdf;%3?
+        tdf = 7.1;
+        tif = 64.6;%factor*tdf;
         cond3 = tif > lim_ti;
         if not(cond3)
             continue
@@ -84,22 +87,28 @@ for mp=8.5%:0.01:8.6%8:0.5:9.5%0.001:1:10 %3.1%:0.05:3.2%
         Gc_xti_divkc =(tif*s+1)*(tdf*s+1)/(s*(alpha*tdf*s+1));
         G=Gc_xti_divkc*Gp_nok;
         [mag,phase,w_line] = bode(G);
-
+        %dcm = datacursormode(gcf) ;
         idx = findNearest(phase,-180+MF);
         K = mag(idx);
+        w_k = w_line(idx);
         K = 1/K;
-        %KdB = -1*20*log10(K);
-        %KdB=20.7;
+        KdB = 24.83;
+        %KdB=20*log10(mag(idx));%.392;
         % se atenua esa magnitud
-        %K=10^(KdB/20);
+        K2=10^(-KdB/20);
+        %tdf=round(tdf,1);
+        %tif=round(tif,1);
         % se calcula la nueva ganancia;
         %kc=(tif)/(K*kp);
-        kc=(K*tif)/(kp);
+        %kc=(K*tif)/(kp);
+        kc=(K2*tif)/(kp);
+        kc = 2.77;
         bp= 100/kc;
         cond2 = bp > lim_bp;
         if not (cond2)
             continue
         end
+
         % se grafica bode con el fin de mirar que a la fase actual, ya esta en 0dB
         Gc_nok=(tif*s+1)*(tdf*s+1)/(tif*s*(alpha*tdf*s+1));
         G1=Gp_nok*Gc_nok*kc*kp;
@@ -123,11 +132,11 @@ for mp=8.5%:0.01:8.6%8:0.5:9.5%0.001:1:10 %3.1%:0.05:3.2%
         %step(sys_r)
             if (cond1 && cond2 && cond3 && cond4 && cond5 && cond6)
             if graph_iterations
-                figure(1)
-                hold on
-                step(sys_r);
-                figure(2)
-                hold on
+                %figure(1)
+                %hold on
+                %step(sys_r);
+                %figure(2)
+                %hold on
                 step(sys_rpal);
             end
             fprintf('sol!!!!!!!!!!!!!')

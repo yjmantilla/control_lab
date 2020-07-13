@@ -114,6 +114,7 @@ end
 % el valor de la parte real deseada se acerca al valor de la parte real
 % obtenida
 % pero nunca tenemos parte imaginaria?
+
 TPI = table(sps_init,tss_init,bps,sps,tss,chis,wns,vals,kcs,tis,Ps,Is,vals,wanteds,reals);
 
 % analisis conclusiones
